@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/228860529.svg)](https://zenodo.org/badge/latestdoi/228860529)
+
 # AskMoreXtension
 
 This software package provides eight Java operations developed at the Digital Academy of the Academy of Sciences and Literature | Mainz that may be used to create custom actions within the Oxygen XML Editor. A documentation of all operations can be found in the [wiki of this repository](https://github.com/digicademy/AskMoreXtension/wiki).
