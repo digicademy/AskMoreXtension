@@ -45,7 +45,9 @@ public class SurroundWithAnnotatedFragmentOperation extends SurroundWithFragment
 		
 		// get arguments from super class
 		ArgumentDescriptor[] basicArguments = super.getArguments();
-		arguments = basicArguments;
+		arguments = new ArgumentDescriptor[basicArguments.length];
+		for (int i=0; i<basicArguments.length; ++i)
+			arguments[i] = basicArguments[i];
 		
 		// set argument names
 		argumentNames = ArgumentDescriptorUtils.getArgumentNames(arguments);
@@ -55,7 +57,8 @@ public class SurroundWithAnnotatedFragmentOperation extends SurroundWithFragment
 		int argIdx = argumentNames.indexOf(argName);
 		arguments[argIdx] = new ArgumentDescriptor(argName,
 				basicArguments[argIdx].getType(),
-				basicArguments[argIdx].getDescription()+"\n"+AskMoreAnnotationParser.getDescription()
+				"The fragment to surround with. The text to be surrounded will become the first leaf per default but you may specify a different"
+				+ " position using the annotation "+destinationAnnotation+".\n"+AskMoreAnnotationParser.getDescription()
 		);
 	}
 

@@ -37,7 +37,9 @@ public class AnnotatedXSLTOperation extends XSLTOperation {
 		
 		// get arguments from super class
 		ArgumentDescriptor[] basicArguments = super.getArguments();
-		arguments = basicArguments;
+		arguments = new ArgumentDescriptor[basicArguments.length];
+		for (int i=0; i<basicArguments.length; ++i)
+			arguments[i] = basicArguments[i];
 		
 		// set argument names
 		argumentNames = ArgumentDescriptorUtils.getArgumentNames(arguments);
