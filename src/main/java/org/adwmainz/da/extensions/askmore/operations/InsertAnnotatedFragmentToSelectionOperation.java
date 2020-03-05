@@ -12,10 +12,11 @@ import java.util.List;
 import javax.swing.text.BadLocationException;
 
 import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
+import org.adwmainz.da.extensions.askmore.models.EditableArgumentDescriptor;
 import org.adwmainz.da.extensions.askmore.utils.APIAccessUtils;
-import org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreAnnotationParser;
+import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
 import org.adwmainz.da.extensions.askmore.utils.InputDialogUtils;
 
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
@@ -39,32 +40,32 @@ public class InsertAnnotatedFragmentToSelectionOperation extends InsertFragmentO
 	 */
 	public InsertAnnotatedFragmentToSelectionOperation() {
 		super();
-		
-		// get arguments from super class
+
+		// derive arguments from arguments of super class
 		ArgumentDescriptor[] basicArguments = super.getArguments();
-		
-		// set argument names
-		List<String> argumentNames = ArgumentDescriptorUtils.getArgumentNames(basicArguments);
-		
-		// get indices of relevant arguments
-		int fragmentArgIdx = argumentNames.indexOf(ArgumentDescriptorUtils.ARGUMENT_FRAGMENT);
-		int insertLocationArgIdx = argumentNames.indexOf(ArgumentDescriptorUtils.ARGUMENT_INSERT_LOCATION);
-		int insertPositionArgIdx = argumentNames.indexOf(ArgumentDescriptorUtils.ARGUMENT_INSERT_POSITION);
-		int goToNextEditablePositionIdx = argumentNames.indexOf(ArgumentDescriptorUtils.ARGUMENT_GO_TO_NEXT_EDITABLE_POSITION);
-		
-		// set arguments
-		arguments = new ArgumentDescriptor[] {
-			new ArgumentDescriptor(ArgumentDescriptorUtils.ARGUMENT_FRAGMENT,
-					basicArguments[fragmentArgIdx].getType(),
-					basicArguments[fragmentArgIdx].getDescription()+"\n"+AskMoreAnnotationParser.getDescription()),
-			new ArgumentDescriptor(ArgumentDescriptorUtils.ARGUMENT_INSERT_LOCATION_RESTRICTION,
-					basicArguments[insertLocationArgIdx].getType(),
-					"An XPath expression that specifies which nodes from the current selection should be used."
-					+ "\n(i.e. this operation inserts the fragment to all selected nodes with the name NAME and an attribute ATTR if the value of this param "
-					+ "is set to //NAME[@ATTR]."),
-			basicArguments[insertPositionArgIdx],
-			basicArguments[goToNextEditablePositionIdx]
-		};
+		arguments = new ArgumentDescriptor[basicArguments.length];
+		for (int i=0; i<basicArguments.length; ++i) {
+			// get basic argument
+			ArgumentDescriptor basicArgument = basicArguments[i];
+			EditableArgumentDescriptor derivedArgument = EditableArgumentDescriptor.copyOf(basicArgument);
+			
+			// add description of how to use AskMoreAnnotations to ARGUMENT_FRAGMENT
+			if (basicArgument.getName().equals(AskMoreArgumentProvider.ARGUMENT_FRAGMENT))
+				derivedArgument.setDescription(basicArgument.getDescription()+"\n"+AskMoreAnnotationParser.getDescription());
+			
+			// replace ARGUMENT_INSERT_LOCATION with ARGUMENT_INSERT_LOCATION_RESTRICTION
+			else if (basicArgument.getName().equals(AskMoreArgumentProvider.ARGUMENT_INSERT_LOCATION))
+				derivedArgument = new EditableArgumentDescriptor(
+						AskMoreArgumentProvider.ARGUMENT_INSERT_LOCATION_RESTRICTION,
+						ArgumentDescriptor.TYPE_XPATH_EXPRESSION,
+						"An XPath expression that specifies which nodes from the current selection should be used."
+								+ "\n(i.e. this operation inserts the fragment to all selected nodes with the name NAME and an attribute ATTR if the value of this param "
+								+ "is set to //NAME[@ATTR]."
+				);
+			
+			// set argument
+			arguments[i] = derivedArgument;
+		}
 	}
 
 	// overridden methods
@@ -76,7 +77,7 @@ public class InsertAnnotatedFragmentToSelectionOperation extends InsertFragmentO
 	@Override
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args)
 			throws IllegalArgumentException, AuthorOperationException {
-		String parsedFragment = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_FRAGMENT);
+		String parsedFragment = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_FRAGMENT);
 		try {
 			parsedFragment = InputDialogUtils.replaceAnnotationsWithUserInput(parsedFragment);
 		} catch (InputDialogClosedException e) {
@@ -85,9 +86,9 @@ public class InsertAnnotatedFragmentToSelectionOperation extends InsertFragmentO
 		}
 		
 		// get other params
-		String insertLocation = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_INSERT_LOCATION_RESTRICTION);
-		String insertPosition = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_INSERT_POSITION);
-		boolean goToNextEditablePosition = ArgumentParser.getValidBoolean(args, ArgumentDescriptorUtils.ARGUMENT_GO_TO_NEXT_EDITABLE_POSITION);
+		String insertLocation = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_INSERT_LOCATION_RESTRICTION);
+		String insertPosition = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_INSERT_POSITION);
+		boolean goToNextEditablePosition = ArgumentParser.getValidBoolean(args, AskMoreArgumentProvider.ARGUMENT_GO_TO_NEXT_EDITABLE_POSITION);
 		
 		// get the document controller and editor access
 		AuthorDocumentController documentController = authorAccess.getDocumentController();

@@ -21,7 +21,7 @@ public class HashedArgumentsMap extends LinkedHashMap<String, Object> implements
 	/**
 	 * Creates an empty HashedArgumentsMap
 	 */
-	protected HashedArgumentsMap() {
+	public HashedArgumentsMap() {
 		super();
 	}
 	

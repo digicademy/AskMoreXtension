@@ -19,8 +19,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JOptionPane;
-
 import org.adwmainz.da.extensions.askmore.factories.BasicInputFieldFactory;
 import org.adwmainz.da.extensions.askmore.factories.SelectableOptionFactory;
 import org.adwmainz.da.extensions.askmore.models.BasicInputField;

@@ -7,13 +7,13 @@
  */
 package org.adwmainz.da.extensions.askmore.operations;
 
-import java.util.List;
-
 import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
+import org.adwmainz.da.extensions.askmore.models.EditableArgumentDescriptor;
 import org.adwmainz.da.extensions.askmore.models.HashedArgumentsMap;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreAnnotationParser;
+import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
 import org.adwmainz.da.extensions.askmore.utils.InputDialogUtils;
 
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
@@ -26,7 +26,6 @@ public class AnnotatedXSLTOperation extends XSLTOperation {
 
 	// fields
 	protected ArgumentDescriptor[] arguments;
-	protected List<String> argumentNames;
 
 	//constructor
 	/**
@@ -35,22 +34,21 @@ public class AnnotatedXSLTOperation extends XSLTOperation {
 	public AnnotatedXSLTOperation() {
 		super();
 		
-		// get arguments from super class
+		// derive arguments from arguments of super class
 		ArgumentDescriptor[] basicArguments = super.getArguments();
 		arguments = new ArgumentDescriptor[basicArguments.length];
-		for (int i=0; i<basicArguments.length; ++i)
-			arguments[i] = basicArguments[i];
-		
-		// set argument names
-		argumentNames = ArgumentDescriptorUtils.getArgumentNames(arguments);
-		
-		// add description of AskMoreAnnotations to ARGUMENT_SCRIPT
-		String argName = ArgumentDescriptorUtils.ARGUMENT_SCRIPT;
-		int argIdx = argumentNames.indexOf(argName);
-		arguments[argIdx] = new ArgumentDescriptor(argName,
-				basicArguments[argIdx].getType(),
-				basicArguments[argIdx].getDescription()+"\n"+AskMoreAnnotationParser.getDescription()
-		);
+		for (int i=0; i<basicArguments.length; ++i) {
+			// get basic argument
+			ArgumentDescriptor basicArgument = basicArguments[i];
+			EditableArgumentDescriptor derivedArgument = EditableArgumentDescriptor.copyOf(basicArgument);
+			
+			// add description of how to use AskMoreAnnotations to ARGUMENT_SCRIPT
+			if (basicArgument.getName().equals(AskMoreArgumentProvider.ARGUMENT_SCRIPT))
+				derivedArgument.setDescription(basicArgument.getDescription()+"\n"+AskMoreAnnotationParser.getDescription());
+			
+			// set argument
+			arguments[i] = derivedArgument;
+		}
 	}
 
 	// overridden methods
@@ -62,12 +60,12 @@ public class AnnotatedXSLTOperation extends XSLTOperation {
 	@Override
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args) throws IllegalArgumentException, AuthorOperationException {
 		// get all params using the argument descriptors
-		HashedArgumentsMap parsedArgs = new HashedArgumentsMap(args, argumentNames);
+		HashedArgumentsMap parsedArgs = new HashedArgumentsMap(args, ArgumentDescriptorUtils.getArgumentNames(arguments));
 		
 		try {
 			// configure ARGUMENT_SCRIPT with an input dialog
-			String parsedScript = InputDialogUtils.replaceAnnotationsWithUserInput(ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_SCRIPT));
-			parsedArgs.put(ArgumentDescriptorUtils.ARGUMENT_SCRIPT, parsedScript);
+			String parsedScript = InputDialogUtils.replaceAnnotationsWithUserInput(ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_SCRIPT));
+			parsedArgs.put(AskMoreArgumentProvider.ARGUMENT_SCRIPT, parsedScript);
 			
 			// invoke main operation from super class
 			super.doOperation(authorAccess, parsedArgs);

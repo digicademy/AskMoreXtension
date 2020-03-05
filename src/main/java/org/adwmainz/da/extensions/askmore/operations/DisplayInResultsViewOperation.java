@@ -14,8 +14,8 @@ import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 import org.adwmainz.da.extensions.askmore.utils.APIAccessUtils;
-import org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
+import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
 
 import ro.sync.ecss.component.validation.AuthorDocumentPositionedInfo;
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
@@ -42,43 +42,13 @@ public class DisplayInResultsViewOperation implements AuthorOperation {
 		// load localized data
 		ResourceBundle rb = ResourceBundle.getBundle("org.adwmainz.da.extensions.askmore.resources.ArgumentTextBundle");
 		
-		// get severity options
-		String[] severityOptions = APIAccessUtils.getSeverityNames();
-		
 		// set argument descriptions
 		arguments = new ArgumentDescriptor[] {
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_ELEMENT_LOCATION, 
-						ArgumentDescriptor.TYPE_XPATH_EXPRESSION, 
-						"An XPath expression indicating the element or elements that shall be selected.\n"
-							+	"Note: If this is not defined then the element at the caret position will be used.",
-						"."
-				),
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_RESULTS_TAB_NAME,
-						ArgumentDescriptor.TYPE_STRING, 
-						"The Name of the results view tab used for displaying the results.",
-						"XPath results"
-				),
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_MESSAGE,
-						ArgumentDescriptor.TYPE_STRING, 
-						"The Message displayed in the results view tab for each element.",
-						rb.getString("ELEMENT_FOUND")
-				),
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_NO_RESULT_MESSAGE,
-						ArgumentDescriptor.TYPE_STRING, 
-						"The Message displayed if no element is found.",
-						rb.getString("NO_RESULT_MESSAGE")
-				),
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_SEVERITY,
-						ArgumentDescriptor.TYPE_CONSTANT_LIST, 
-						"The severity of the message.",
-						severityOptions,
-						severityOptions[0]
-				)
+				AskMoreArgumentProvider.getSelectElementLocationArgumentDescriptor(),
+				AskMoreArgumentProvider.getResultsTabNameArgumentDescriptor(rb.getString("XPATH_RESULTS")),
+				AskMoreArgumentProvider.getResultsViewMessageArgumentDescriptor(rb.getString("ELEMENT_FOUND")),
+				AskMoreArgumentProvider.getNoResultMessageArgumentDescriptor(),
+				AskMoreArgumentProvider.getSeverityArgumentDescriptor()
 		};
 	}
 
@@ -92,11 +62,11 @@ public class DisplayInResultsViewOperation implements AuthorOperation {
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args)
 			throws IllegalArgumentException, AuthorOperationException {
 		// get params
-		String elementLocation = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_ELEMENT_LOCATION);
-		String resultsTabName = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_RESULTS_TAB_NAME);
-		String message = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_MESSAGE);
-		String noResultMessage = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_NO_RESULT_MESSAGE);
-		int severity = APIAccessUtils.getSeverity(ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_SEVERITY));
+		String elementLocation = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_ELEMENT_LOCATION);
+		String resultsTabName = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_RESULTS_TAB_NAME);
+		String message = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_MESSAGE);
+		String noResultMessage = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_NO_RESULT_MESSAGE);
+		int severity = APIAccessUtils.getSeverity(ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_SEVERITY));
 		
 		// get document controller
 		AuthorDocumentController documentController = authorAccess.getDocumentController();

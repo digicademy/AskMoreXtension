@@ -14,8 +14,8 @@ import java.util.Set;
 
 import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
 import org.adwmainz.da.extensions.askmore.models.SelectableOption;
-import org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
+import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
 import org.adwmainz.da.extensions.askmore.utils.InputDialogUtils;
 
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
@@ -40,26 +40,10 @@ public class ChooseActionOperation implements AuthorOperation {
 		
 		// init argument descriptions
 		arguments = new ArgumentDescriptor[] {
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_DIALOG_TITLE, 
-						ArgumentDescriptor.TYPE_STRING, 
-						"The title of the dialog used to select an action.",
-						rb.getString("EXECUTE_ACTION")),
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_SELECTION_LABEL, 
-						ArgumentDescriptor.TYPE_STRING, 
-						"The text that should displayed next to the selection.",
-						rb.getString("CHOOSE_ACTION")),
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_ACTION_IDS, 
-						ArgumentDescriptor.TYPE_STRING, 
-						"The action IDs which will be available through the dialog, separated by new lines."
-						+ "\n(This list must contain as many values as the one of "+ArgumentDescriptorUtils.ARGUMENT_ACTION_NAMES+")"),
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_ACTION_NAMES, 
-						ArgumentDescriptor.TYPE_STRING, 
-						"The items which will be selectable in the dialog, separated by new lines."
-						+ "\n(This list must contain as many values as the one of "+ArgumentDescriptorUtils.ARGUMENT_ACTION_IDS+")")
+				AskMoreArgumentProvider.getDialogTitleArgumentDescriptor(rb.getString("EXECUTE_ACTION")),
+				AskMoreArgumentProvider.getSelectionLabelArgumentDescriptor(rb.getString("CHOOSE_ACTION")),
+				AskMoreArgumentProvider.getActionIdsArgumentDescriptor(),
+				AskMoreArgumentProvider.getActionNamesArgumentDescriptor()
 		};
 	}
 
@@ -73,10 +57,10 @@ public class ChooseActionOperation implements AuthorOperation {
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args)
 			throws IllegalArgumentException, AuthorOperationException {
 		// get params
-		String dialogTitle = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_DIALOG_TITLE);
-		String selectionLabel = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_SELECTION_LABEL);
-		Map<String, String> selectableActions = ArgumentParser.validateMappedArgs(args, ArgumentDescriptorUtils.ARGUMENT_ACTION_IDS, 
-				ArgumentDescriptorUtils.ARGUMENT_ACTION_NAMES);
+		String dialogTitle = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_DIALOG_TITLE);
+		String selectionLabel = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_SELECTION_LABEL);
+		Map<String, String> selectableActions = ArgumentParser.validateMappedArgs(args, AskMoreArgumentProvider.ARGUMENT_ACTION_IDS, 
+				AskMoreArgumentProvider.ARGUMENT_ACTION_NAMES);
 		
 		// get actions
 		AuthorActionsProvider actionsProvider = authorAccess.getEditorAccess().getActionsProvider();

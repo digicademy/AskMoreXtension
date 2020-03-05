@@ -7,15 +7,15 @@
  */
 package org.adwmainz.da.extensions.askmore.operations;
 
-import java.util.List;
-
 import javax.swing.text.BadLocationException;
 
 import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
+import org.adwmainz.da.extensions.askmore.models.EditableArgumentDescriptor;
 import org.adwmainz.da.extensions.askmore.models.HashedArgumentsMap;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreAnnotationParser;
+import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
 import org.adwmainz.da.extensions.askmore.utils.InputDialogUtils;
 import org.adwmainz.da.extensions.askmore.utils.APIAccessUtils;
 
@@ -34,7 +34,6 @@ public class SurroundWithAnnotatedFragmentOperation extends SurroundWithFragment
 
 	// fields
 	protected ArgumentDescriptor[] arguments;
-	protected List<String> argumentNames;
 	
 	// constructor
 	/**
@@ -42,24 +41,23 @@ public class SurroundWithAnnotatedFragmentOperation extends SurroundWithFragment
 	 */
 	public SurroundWithAnnotatedFragmentOperation() {
 		super();
-		
-		// get arguments from super class
+
+		// derive arguments from arguments of super class
 		ArgumentDescriptor[] basicArguments = super.getArguments();
 		arguments = new ArgumentDescriptor[basicArguments.length];
-		for (int i=0; i<basicArguments.length; ++i)
-			arguments[i] = basicArguments[i];
-		
-		// set argument names
-		argumentNames = ArgumentDescriptorUtils.getArgumentNames(arguments);
-		
-		// add description of AskMoreAnnotations to ARGUMENT_FRAGMENT
-		String argName = ArgumentDescriptorUtils.ARGUMENT_FRAGMENT;
-		int argIdx = argumentNames.indexOf(argName);
-		arguments[argIdx] = new ArgumentDescriptor(argName,
-				basicArguments[argIdx].getType(),
-				"The fragment to surround with. The text to be surrounded will become the first leaf per default but you may specify a different"
-				+ " position using the annotation "+destinationAnnotation+".\n"+AskMoreAnnotationParser.getDescription()
-		);
+		for (int i=0; i<basicArguments.length; ++i) {
+			// get basic argument
+			ArgumentDescriptor basicArgument = basicArguments[i];
+			EditableArgumentDescriptor derivedArgument = EditableArgumentDescriptor.copyOf(basicArgument);
+			
+			// add description of how to use AskMoreAnnotations to ARGUMENT_FRAGMENT
+			if (basicArgument.getName().equals(AskMoreArgumentProvider.ARGUMENT_FRAGMENT))
+				derivedArgument.setDescription("The fragment to surround with. The text to be surrounded will become the first leaf per default but you"
+						+ " may specify a different position using the annotation "+destinationAnnotation+".\n"+AskMoreAnnotationParser.getDescription());
+			
+			// set argument
+			arguments[i] = derivedArgument;
+		}
 	}
 
 	// overridden methods
@@ -72,12 +70,12 @@ public class SurroundWithAnnotatedFragmentOperation extends SurroundWithFragment
 	@Override
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args) throws IllegalArgumentException, AuthorOperationException {
 		// get all params using the argument descriptors
-		HashedArgumentsMap parsedArgs = new HashedArgumentsMap(args, argumentNames);
-
+		HashedArgumentsMap parsedArgs = new HashedArgumentsMap(args, ArgumentDescriptorUtils.getArgumentNames(arguments));
+		
 		// configure ARGUMENT_FRAGMENT with an input dialog
 		String parsedFragment;
 		try {
-			parsedFragment = InputDialogUtils.replaceAnnotationsWithUserInput(ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_FRAGMENT));
+			parsedFragment = InputDialogUtils.replaceAnnotationsWithUserInput(ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_FRAGMENT));
 		} catch (InputDialogClosedException e) {
 			// abort action if user closes the dialog
 			return;
@@ -101,7 +99,7 @@ public class SurroundWithAnnotatedFragmentOperation extends SurroundWithFragment
 				editorAccess.deleteSelection();
 				
 				// insert fragment
-				if (ArgumentParser.getValidBoolean(args, ArgumentDescriptorUtils.ARGUMENT_SCHEMA_AWARE))
+				if (ArgumentParser.getValidBoolean(args, AskMoreArgumentProvider.ARGUMENT_SCHEMA_AWARE))
 					documentController.insertXMLFragment(parsedFragment, startOffset);
 				else
 					documentController.insertXMLFragmentSchemaAware(parsedFragment, startOffset);
@@ -114,7 +112,7 @@ public class SurroundWithAnnotatedFragmentOperation extends SurroundWithFragment
 			}
 		} else {
 			// invoke main operation from super class
-			parsedArgs.put(ArgumentDescriptorUtils.ARGUMENT_FRAGMENT, parsedFragment);
+			parsedArgs.put(AskMoreArgumentProvider.ARGUMENT_FRAGMENT, parsedFragment);
 			super.doOperation(authorAccess, parsedArgs);
 		}
 	}

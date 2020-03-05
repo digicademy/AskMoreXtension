@@ -16,14 +16,13 @@ import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 
 import org.adwmainz.da.extensions.askmore.utils.APIAccessUtils;
-import org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
+import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
 
 import ro.sync.ecss.dom.wrappers.AuthorNodeDomWrapper;
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
 import ro.sync.ecss.extensions.api.ArgumentsMap;
 import ro.sync.ecss.extensions.api.AuthorAccess;
-import ro.sync.ecss.extensions.api.AuthorConstants;
 import ro.sync.ecss.extensions.api.AuthorDocumentController;
 import ro.sync.ecss.extensions.api.AuthorOperation;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
@@ -43,27 +42,9 @@ public class CopyToClipboardOperation implements AuthorOperation {
 		
 		// init argument descriptions
 		arguments = new ArgumentDescriptor[] {
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_ELEMENT_LOCATION, 
-						ArgumentDescriptor.TYPE_XPATH_EXPRESSION, 
-						"An XPath expression indicating the element, attribute or text content to be copied. "
-						+ "\n(Leave empty to copy the current selection within the Author Mode.)"
-				),
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_MESSAGE,
-						ArgumentDescriptor.TYPE_STRING, 
-						"The Message displayed in the results view tab for each element.",
-						rb.getString("COPIED_TO_CLIPBOARD")
-				),
-				new ArgumentDescriptor(
-						ArgumentDescriptorUtils.ARGUMENT_NOTIFY_USER, 
-						ArgumentDescriptor.TYPE_CONSTANT_LIST, 
-						"Specifies whether the message from the argument " + ArgumentDescriptorUtils.ARGUMENT_MESSAGE + " should be displayed or not.", 
-						new String[] {
-								AuthorConstants.ARG_VALUE_TRUE, 
-								AuthorConstants.ARG_VALUE_FALSE},
-						AuthorConstants.ARG_VALUE_FALSE
-				)
+				AskMoreArgumentProvider.getCopyElementLocationArgumentDescriptor(),
+				AskMoreArgumentProvider.getResultsViewMessageArgumentDescriptor(rb.getString("COPIED_TO_CLIPBOARD")),
+				AskMoreArgumentProvider.getNotifyUserWithMessageArgumentDescriptor()
 		};
 	}
 
@@ -77,9 +58,9 @@ public class CopyToClipboardOperation implements AuthorOperation {
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args)
 			throws IllegalArgumentException, AuthorOperationException {
 		// get params
-		String xPath = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_ELEMENT_LOCATION, "");
-		String message = ArgumentParser.getValidString(args, ArgumentDescriptorUtils.ARGUMENT_MESSAGE);
-		boolean notifyUser = ArgumentParser.getValidBoolean(args, ArgumentDescriptorUtils.ARGUMENT_NOTIFY_USER);
+		String xPath = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_ELEMENT_LOCATION, "");
+		String message = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_MESSAGE);
+		boolean notifyUser = ArgumentParser.getValidBoolean(args, AskMoreArgumentProvider.ARGUMENT_NOTIFY_USER);
 		
 		// get document controller
 		AuthorDocumentController documentController = authorAccess.getDocumentController();
