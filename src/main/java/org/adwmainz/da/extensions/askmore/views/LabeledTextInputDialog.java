@@ -53,7 +53,7 @@ public class LabeledTextInputDialog extends BasicInputDialog<Map<String, String>
 	 * Creates a new DynamicTextInputDialog with the specified params
 	 * @param owner the Frame from which the dialog is displayed
 	 * @param isModal specifies whether the dialog blocks user input to other top-level windows when shown
-	 * @param dialogModels
+	 * @param dialogModel a map of BasicInputFields and their respective label texts
 	 */
 	public LabeledTextInputDialog(Window owner, boolean isModal, Map<String, BasicInputField<String>> dialogModel) {
 		super(owner, isModal);
@@ -70,7 +70,7 @@ public class LabeledTextInputDialog extends BasicInputDialog<Map<String, String>
 	 * @param verticalAlignment specifies the vertical alignment of all components. Use <code>Alignment.LEADING</code> to align them to the top edge,
 	 *  <code>Alignment.TRAILING</code> to align them to the bottom edge or <code>Alignment.BASELINE</code> to align them to their baselines.
 	 * @param verticalAlignment
-	 * @param dialogModels
+	 * @param dialogModel a map of BasicInputFields and their respective label texts
 	 */
 	public LabeledTextInputDialog(Window owner, boolean isModal, Alignment horizontalAlignment, Alignment verticalAlignment, 
 			Map<String, BasicInputField<String>> dialogModel) {
@@ -83,13 +83,13 @@ public class LabeledTextInputDialog extends BasicInputDialog<Map<String, String>
 	 * Creates a new DynamicTextInputDialog with the specified params
 	 * @param owner the Frame from which the dialog is displayed
 	 * @param isModal specifies whether the dialog blocks user input to other top-level windows when shown
-	 * @param horizontalAlignment specifies the horizontal alignment of normal form components. Use <code>Alignment.LEADING</code> to left indent,
+	 * @param horizontalFormGroupAlignment specifies the horizontal alignment of normal form components. Use <code>Alignment.LEADING</code> to left indent,
 	 *  <code>Alignment.TRAILING</code> to right indent or <code>Alignment.CENTER</code> to full indent
 	 * @param verticalAlignment specifies the vertical alignment of all components. Use <code>Alignment.LEADING</code> to align them to the top edge,
 	 *  <code>Alignment.TRAILING</code> to align them to the bottom edge or <code>Alignment.BASELINE</code> to align them to their baselines.
 	 * @param horizontalOkCancelBtnAlignment specifies the horizontal alignment of normal the main buttons (OK/CANCEL). Use <code>Alignment.LEADING</code> to
 	 *  left indent, <code>Alignment.TRAILING</code> to right indent or <code>Alignment.CENTER</code> to full indent
-	 * @param dialogModels
+	 * @param dialogModel a map of BasicInputFields and their respective label texts
 	 */
 	public LabeledTextInputDialog(Window owner, boolean isModal, Alignment horizontalFormGroupAlignment,
 			Alignment verticalAlignment, Alignment horizontalOkCancelBtnAlignment, Map<String, BasicInputField<String>> dialogModel) {

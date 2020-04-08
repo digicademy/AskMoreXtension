@@ -81,7 +81,7 @@ public abstract class BasicInputDialog<T> extends JDialog implements ActionListe
 	 * Creates a new BasicInputDialog with the specified params
 	 * @param owner the Frame from which the dialog is displayed
 	 * @param isModal specifies whether the dialog blocks user input to other top-level windows when shown
-	 * @param horizontalAlignment specifies the horizontal alignment of normal form components. Use <code>Alignment.LEADING</code> to left indent,
+	 * @param horizontalFormGroupAlignment specifies the horizontal alignment of normal form components. Use <code>Alignment.LEADING</code> to left indent,
 	 *  <code>Alignment.TRAILING</code> to right indent or <code>Alignment.CENTER</code> to full indent
 	 * @param verticalAlignment specifies the vertical alignment of all components. Use <code>Alignment.LEADING</code> to align them to the top edge,
 	 *  <code>Alignment.TRAILING</code> to align them to the bottom edge or <code>Alignment.BASELINE</code> to align them to their baselines.

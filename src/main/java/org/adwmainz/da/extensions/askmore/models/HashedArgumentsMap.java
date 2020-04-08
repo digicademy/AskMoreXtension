@@ -32,8 +32,8 @@ public class HashedArgumentsMap extends LinkedHashMap<String, Object> implements
 	 */
 	public HashedArgumentsMap(ArgumentsMap args, List<String> argumentNames) {
 		super();
-		for (String argName: argumentNames)
-			this.put(argName, args.getArgumentValue(argName));
+		for (String argumentName: argumentNames)
+			this.put(argumentName, args.getArgumentValue(argumentName));
 	}
 	
 	
@@ -43,8 +43,8 @@ public class HashedArgumentsMap extends LinkedHashMap<String, Object> implements
 	 * @param argumentName an argument name
 	 */
 	@Override
-	public Object getArgumentValue(String argName) {
-		return get(argName);
+	public Object getArgumentValue(String argumentName) {
+		return get(argumentName);
 	}
 
 }

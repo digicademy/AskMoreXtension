@@ -159,7 +159,6 @@ public class ArgumentParser {
 	 * @param args the ArgumentMap of the operation
 	 * @param keyArgumentName the name of the list argument providing the keys
 	 * @param valueArgumentName the name of the list argument providing the values
-	 * @param delimiter the delimiter used to separate each argument value in the list
 	 * @throws IllegalArgumentException if the given argument is empty or otherwise invalid
 	 */
 	public static Map<String,String> validateMappedArgs(ArgumentsMap args, String keyArgumentName, String valueArgumentName) throws IllegalArgumentException {

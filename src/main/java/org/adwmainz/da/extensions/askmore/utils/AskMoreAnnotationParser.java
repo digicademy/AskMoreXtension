@@ -56,7 +56,7 @@ public class AskMoreAnnotationParser {
 	/**
 	 * Creates a Map of labels and input fields that may be used as the dialog model of an DynamicTextInputDialogDeserializes from a list of serialized
 	 *  AskMoreAnnotations
-	 * @param serializedAnnotations a list of serialized annotations
+	 * @param askMoreAnnotations a list of serialized annotations
 	 */
 	public static Map<String, BasicInputField<String>> createDialogModel(List<String> askMoreAnnotations) {
 		Map<String, BasicInputField<String>> dialogModel = new LinkedHashMap<>();

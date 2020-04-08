@@ -65,7 +65,7 @@ public class SingleSelectionDialog<T> extends BasicInputDialog<T> {
 	 * <br/><br/>Please use the <code>setLabelText()</code> method to add a label
 	 * @param owner the Frame from which the dialog is displayed
 	 * @param isModal specifies whether the dialog blocks user input to other top-level windows when shown
-	 * @param horizontalAlignment specifies the horizontal alignment of the selection form control. Use <code>Alignment.LEADING</code> to left indent,
+	 * @param horizontalFormGroupAlignment specifies the horizontal alignment of the selection form control. Use <code>Alignment.LEADING</code> to left indent,
 	 *  <code>Alignment.TRAILING</code> to right indent or <code>Alignment.CENTER</code> to full indent
 	 * @param verticalAlignment specifies the vertical alignment of the selection form control. Use <code>Alignment.LEADING</code> to align it to the top edge,
 	 *  <code>Alignment.TRAILING</code> to align it to the bottom edge or <code>Alignment.BASELINE</code> to align it to the baseline.
