@@ -27,6 +27,7 @@ public class APIAccessUtils {
 	 * @param systemID the systemID of the AuthorDocumentNode
 	 * @throws MalformedURLException
 	 * @throws URISyntaxException
+	 * @deprecated use new File(systemID).getName()
 	 */
 	public static String getFileName(String systemID) throws MalformedURLException, URISyntaxException {
 		File file = new File(new URL(systemID).toURI());

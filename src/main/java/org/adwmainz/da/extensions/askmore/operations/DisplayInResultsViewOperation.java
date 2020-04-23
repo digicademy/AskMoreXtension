@@ -7,8 +7,7 @@
  */
 package org.adwmainz.da.extensions.askmore.operations;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import java.io.File;
 import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
@@ -73,12 +72,7 @@ public class DisplayInResultsViewOperation implements AuthorOperation {
 		
 		// try to add file name to tab name
 		String systemID = documentController.getAuthorDocumentNode().getSystemID();
-		try {
-			String fileName = APIAccessUtils.getFileName(systemID);
-			resultsTabName += " - " + fileName;
-		} catch (MalformedURLException | URISyntaxException e) {
-			// leave the tab name as is
-		}
+		resultsTabName += " - " + new File(systemID).getName();
 		
 		// prepare results view by removing previous results
 		ResultsManager resultsManager = PluginWorkspaceProvider.getPluginWorkspace().getResultsManager();
