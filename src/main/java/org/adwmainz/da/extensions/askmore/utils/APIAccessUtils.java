@@ -57,10 +57,9 @@ public class APIAccessUtils {
 	 * @return <code>true</code> if the ContentInterval contains the target node
 	 */
 	public static boolean containsNode(ContentInterval interval, AuthorNode targetNode) {
-		int intermediaryOffset = (targetNode.getStartOffset() + targetNode.getEndOffset())/2;
-		if (intermediaryOffset < interval.getStartOffset())
+		if (interval.getStartOffset() > targetNode.getEndOffset())
 			return false;
-		if (intermediaryOffset > interval.getEndOffset())
+		if (interval.getEndOffset() < targetNode.getStartOffset())
 			return false;
 		return true;
 	}
@@ -78,7 +77,7 @@ public class APIAccessUtils {
 	 *  <br />The allowed values are: <code>Info</code>, <code>Warning</code>, <code>Error</code> and <code>Fatal</code>
 	 * @throws IllegalArgumentException if <code>severityName</code> is not one of the mentioned values 
 	 */
-	public static int getSeverity(String severityName) {
+	public static int getSeverity(String severityName) throws IllegalArgumentException {
 		switch (severityName) {
 			case "Info":
 				return DocumentPositionedInfo.SEVERITY_INFO;
