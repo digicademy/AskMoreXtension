@@ -64,7 +64,16 @@ public class AskMoreArgumentProvider {
 		return new ArgumentDescriptor(
 				ARGUMENT_DIALOG_TITLE, 
 				ArgumentDescriptor.TYPE_STRING, 
-				"The title of the dialog used to select an action.",
+				"The title of the generated dialog.",
+				defaultValue
+		);
+	}
+	
+	public static ArgumentDescriptor getMessageArgumentDescriptor(String defaultValue) {
+		return new ArgumentDescriptor(
+				ARGUMENT_MESSAGE,
+				ArgumentDescriptor.TYPE_STRING, 
+				"The Message displayed in a new dialog.",
 				defaultValue
 		);
 	}
