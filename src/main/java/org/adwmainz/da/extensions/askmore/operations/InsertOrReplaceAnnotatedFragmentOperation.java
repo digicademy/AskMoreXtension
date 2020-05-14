@@ -21,6 +21,7 @@ import ro.sync.ecss.extensions.api.ArgumentDescriptor;
 import ro.sync.ecss.extensions.api.ArgumentsMap;
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
+import ro.sync.ecss.extensions.api.access.AuthorEditorAccess;
 import ro.sync.ecss.extensions.commons.operations.InsertOrReplaceFragmentOperation;
 
 public class InsertOrReplaceAnnotatedFragmentOperation extends InsertOrReplaceFragmentOperation {
@@ -37,7 +38,7 @@ public class InsertOrReplaceAnnotatedFragmentOperation extends InsertOrReplaceFr
 		
 		// derive arguments from arguments of super class
 		ArgumentDescriptor[] basicArguments = super.getArguments();
-		arguments = new ArgumentDescriptor[basicArguments.length];
+		arguments = new ArgumentDescriptor[basicArguments.length + 1];
 		for (int i=0; i<basicArguments.length; ++i) {
 			// get basic argument
 			ArgumentDescriptor basicArgument = basicArguments[i];
@@ -50,6 +51,9 @@ public class InsertOrReplaceAnnotatedFragmentOperation extends InsertOrReplaceFr
 			// set argument
 			arguments[i] = derivedArgument;
 		}
+		
+		// add custom argument
+		arguments[basicArguments.length] = AskMoreArgumentProvider.getRemoveSelectionArgumentDescriptor();
 	}
 
 	// overridden methods
@@ -61,6 +65,7 @@ public class InsertOrReplaceAnnotatedFragmentOperation extends InsertOrReplaceFr
 	@Override
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args) throws IllegalArgumentException, AuthorOperationException {
 		// get all params using the argument descriptors
+		boolean removeSelection = ArgumentParser.getValidBoolean(args, AskMoreArgumentProvider.ARGUMENT_REMOVE_SELECTION);
 		HashedArgumentsMap parsedArgs = new HashedArgumentsMap(args, ArgumentDescriptorUtils.getArgumentNames(arguments));
 		
 		try {
@@ -69,6 +74,14 @@ public class InsertOrReplaceAnnotatedFragmentOperation extends InsertOrReplaceFr
 			parsedArgs.put(AskMoreArgumentProvider.ARGUMENT_FRAGMENT, parsedFragment);
 			
 			// invoke main operation from super class
+			if (!removeSelection) {
+				// prevent super class from removing all selections per default
+				String insertLocation = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_INSERT_LOCATION, "");
+				if (!insertLocation.isEmpty()) {
+					AuthorEditorAccess editorAccess = authorAccess.getEditorAccess();
+					editorAccess.setCaretPosition(editorAccess.getSelectionStart() + 1);
+				}
+			}
 			super.doOperation(authorAccess, parsedArgs);
 		} catch (InputDialogClosedException e) {
 			// abort action if user closes the dialog
