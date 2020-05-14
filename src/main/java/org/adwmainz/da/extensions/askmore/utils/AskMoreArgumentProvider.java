@@ -27,6 +27,7 @@ public class AskMoreArgumentProvider {
 	public static final String ARGUMENT_MESSAGE = "message";
 	public static final String ARGUMENT_NO_RESULT_MESSAGE = "noResultMessage";
 	public static final String ARGUMENT_NOTIFY_USER = "notifyUser";
+	public static final String ARGUMENT_REMOVE_SELECTION = "removeSelection";
 	public static final String ARGUMENT_RESULTS_TAB_NAME = "resultsTabName";
 	public static final String ARGUMENT_SCHEMA_AWARE = "schemaAware";
 	public static final String ARGUMENT_SCRIPT = "script";
@@ -103,6 +104,18 @@ public class AskMoreArgumentProvider {
 				ArgumentDescriptor.TYPE_STRING, 
 				"The Message displayed in the results view tab for each element.",
 				defaultValue
+		);
+	}
+	
+	public static ArgumentDescriptor getRemoveSelectionArgumentDescriptor() {
+		return new ArgumentDescriptor(
+				ARGUMENT_REMOVE_SELECTION, 
+				ArgumentDescriptor.TYPE_CONSTANT_LIST, 
+				"Specifies whether all selections in the author mode should be removed or not.", 
+				new String[] {
+						AuthorConstants.ARG_VALUE_TRUE, 
+						AuthorConstants.ARG_VALUE_FALSE},
+				AuthorConstants.ARG_VALUE_TRUE
 		);
 	}
 	
