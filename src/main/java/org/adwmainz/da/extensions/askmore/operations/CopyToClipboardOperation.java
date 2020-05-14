@@ -43,7 +43,7 @@ public class CopyToClipboardOperation implements AuthorOperation {
 		// init argument descriptions
 		arguments = new ArgumentDescriptor[] {
 				AskMoreArgumentProvider.getCopyElementLocationArgumentDescriptor(),
-				AskMoreArgumentProvider.getResultsViewMessageArgumentDescriptor(rb.getString("COPIED_TO_CLIPBOARD")),
+				AskMoreArgumentProvider.getMessageArgumentDescriptor(rb.getString("COPIED_TO_CLIPBOARD")),
 				AskMoreArgumentProvider.getNotifyUserWithMessageArgumentDescriptor()
 		};
 	}

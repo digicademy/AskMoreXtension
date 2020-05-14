@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 
 import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
@@ -123,4 +124,23 @@ public class InputDialogUtils {
 		return AskMoreAnnotationParser.replaceAnnotations(annotatedText, askMoreAnnotations, userInput);
 	}
 
+	/**
+	 * Returns the int representation of the specified severity
+	 * @param severityName the name of a severity
+	 *  <br />The allowed values are: <code>Info</code>, <code>Warning</code>, <code>Error</code> and <code>Fatal</code>
+	 * @throws IllegalArgumentException if <code>severityName</code> is not one of the mentioned values 
+	 */
+	public static int getMessageType(String severityName) throws IllegalArgumentException {
+		switch (severityName) {
+			case "Info":
+				return JOptionPane.INFORMATION_MESSAGE;
+			case "Warning":
+				return JOptionPane.WARNING_MESSAGE;
+			case "Error":
+			case "Fatal":
+				return JOptionPane.ERROR_MESSAGE;
+			default:
+				throw new IllegalArgumentException("Unknown severity "+severityName);
+		}
+	}
 }
