@@ -37,7 +37,7 @@ public class APIAccessUtils {
 		File file = new File(new URL(systemID).toURI());
 		return file.getName();
 	}
-	
+
 	/**
 	 * Returns a serialized form of the current selection in the AuthorMode
 	 * @param editorAccess the current AuthorEditorAccess
@@ -48,12 +48,12 @@ public class APIAccessUtils {
 		// get position of selection
 		int selectionStart = editorAccess.getSelectionStart();
 		int selectionEnd = editorAccess.getSelectionEnd() - 1;
-		
-		// create a fragment and return its serialization 
+
+		// create a fragment and return its serialization
 		AuthorDocumentFragment fragment = documentController.createDocumentFragment(selectionStart, selectionEnd);
 		return documentController.serializeFragmentToXML(fragment);
 	}
-	
+
 	/**
 	 * Checks if the specified ContentInterval contains the specified target node or not
 	 * @param targetNode an AuthorNode
@@ -61,13 +61,13 @@ public class APIAccessUtils {
 	 * @return <code>true</code> if the ContentInterval contains the target node
 	 */
 	public static boolean containsNode(ContentInterval interval, AuthorNode targetNode) {
-		if (interval.getStartOffset() > targetNode.getEndOffset())
+		if (interval.getStartOffset() >= targetNode.getEndOffset())
 			return false;
-		if (interval.getEndOffset() < targetNode.getStartOffset())
+		if (interval.getEndOffset() <= targetNode.getStartOffset())
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * Returns an array of all supported severity names
 	 */
@@ -79,7 +79,7 @@ public class APIAccessUtils {
 	 * Returns the int representation of the specified severity
 	 * @param severityName the name of a severity
 	 *  <br />The allowed values are: <code>Info</code>, <code>Warning</code>, <code>Error</code> and <code>Fatal</code>
-	 * @throws IllegalArgumentException if <code>severityName</code> is not one of the mentioned values 
+	 * @throws IllegalArgumentException if <code>severityName</code> is not one of the mentioned values
 	 */
 	public static int getSeverity(String severityName) throws IllegalArgumentException {
 		switch (severityName) {
@@ -95,9 +95,9 @@ public class APIAccessUtils {
 				throw new IllegalArgumentException("Unknown severity "+severityName);
 		}
 	}
-		
+
 	/**
-	 * Returns a serialized form of XPath results (i.e. serialized XML if the result type is <code>node()</node> and plain text otherwise) 
+	 * Returns a serialized form of XPath results (i.e. serialized XML if the result type is <code>node()</node> and plain text otherwise)
 	 * @param documentController the current AuthorDocumentController
 	 * @param xPathExpression an XPath expression
 	 * @throws AuthorOperationException if the xPathExpression is invalid or the results cannot be serialized
@@ -120,7 +120,7 @@ public class APIAccessUtils {
 		Object[] rawResults = documentController.evaluateXPath(xPathExpression, contextNode, false, false, false, true);
 		return serializeXPathResults(documentController, rawResults);
 	}
-	
+
 	protected static List<String> serializeXPathResults(AuthorDocumentController documentController, Object[] rawResults)
 			throws AuthorOperationException {
 		List<String> results = new ArrayList<>(rawResults.length);
@@ -137,7 +137,7 @@ public class APIAccessUtils {
 		}
 		return results;
 	}
-	
+
 	/**
 	 * Serializes a given AuthorNode
 	 * @param documentController the current AuthorDocumentController
@@ -152,5 +152,5 @@ public class APIAccessUtils {
 			throw new AuthorOperationException("Cannot serialize the given node!", ex);
 		}
 	}
-	
+
 }

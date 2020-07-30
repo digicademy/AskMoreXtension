@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - fixed org.adwmainz.da.extensions.askmore.operations.\*.java#doOperation() to throw an exception if the generated input dialog is closed
 - fixed method org.adwmainz.da.extensions.askmore.operations.DisplayInResultsViewOperation#doOperation() to be able to handle non-node XPath results
+- fixed method org.adwmainz.da.extensions.askmore.utils.APIAccessUtils.java#containsNode()
 
 
 ## [1.2.0] - 2020-05-14
