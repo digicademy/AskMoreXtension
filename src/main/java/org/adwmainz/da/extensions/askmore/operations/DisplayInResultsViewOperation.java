@@ -12,18 +12,19 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
+import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
+import org.adwmainz.da.extensions.askmore.factories.PositionedInfoFactory;
 import org.adwmainz.da.extensions.askmore.utils.APIAccessUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
 
-import ro.sync.ecss.component.validation.AuthorDocumentPositionedInfo;
+import ro.sync.document.DocumentPositionedInfo;
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
 import ro.sync.ecss.extensions.api.ArgumentsMap;
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.AuthorDocumentController;
 import ro.sync.ecss.extensions.api.AuthorOperation;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
-import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.results.ResultsManager;
 import ro.sync.exml.workspace.api.results.ResultsManager.ResultType;
@@ -43,9 +44,9 @@ public class DisplayInResultsViewOperation implements AuthorOperation {
 		
 		// set argument descriptions
 		arguments = new ArgumentDescriptor[] {
-				AskMoreArgumentProvider.getSelectElementLocationArgumentDescriptor(),
+				AskMoreArgumentProvider.getSelectAnnotatedElementLocationArgumentDescriptor(),
 				AskMoreArgumentProvider.getResultsTabNameArgumentDescriptor(rb.getString("XPATH_RESULTS")),
-				AskMoreArgumentProvider.getResultsViewMessageArgumentDescriptor(rb.getString("ELEMENT_FOUND")),
+				AskMoreArgumentProvider.getAnnotatedResultsViewMessageArgumentDescriptor(rb.getString("ELEMENT_FOUND")),
 				AskMoreArgumentProvider.getNoResultMessageArgumentDescriptor(),
 				AskMoreArgumentProvider.getSeverityArgumentDescriptor()
 		};
@@ -60,8 +61,15 @@ public class DisplayInResultsViewOperation implements AuthorOperation {
 	@Override
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args)
 			throws IllegalArgumentException, AuthorOperationException {
-		// get params
-		String elementLocation = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_ELEMENT_LOCATION);
+		String elementLocation;
+		try {
+			elementLocation = ArgumentParser.getValidStringWithUserInput(args, AskMoreArgumentProvider.ARGUMENT_ELEMENT_LOCATION);
+		} catch (InputDialogClosedException e) {
+			// abort action if user closes the dialog
+			throw new IllegalArgumentException(AskMoreArgumentProvider.getClosedDialogMessage());
+		}
+		
+		// get other params
 		String resultsTabName = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_RESULTS_TAB_NAME);
 		String message = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_MESSAGE);
 		String noResultMessage = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_NO_RESULT_MESSAGE);
@@ -80,18 +88,18 @@ public class DisplayInResultsViewOperation implements AuthorOperation {
 		
 
 		// get target nodes
-		AuthorNode[] targetNodes = documentController.findNodesByXPath(elementLocation, false, true, true);
+		Object[] targets = documentController.evaluateXPath(elementLocation, false, false, false);
 
 		// notify user if there are no results and exit early
-		if (targetNodes.length == 0) {
+		if (targets.length == 0) {
 			JOptionPane.showMessageDialog(null, noResultMessage);
 			return;
 		}
 		
 		// add results
-		for (AuthorNode targetNode: targetNodes) {
-			AuthorDocumentPositionedInfo result = new AuthorDocumentPositionedInfo(severity, message, systemID, targetNode);
-			resultsManager.addResult(resultsTabName, result, ResultType.PROBLEM, true, false);
+		for (Object target: targets) {
+			DocumentPositionedInfo result = PositionedInfoFactory.createWithAnnotatedMessage(target, message, documentController, severity, systemID);
+			resultsManager.addResult(resultsTabName, result, ResultType.GENERIC, true, false);
 		}
 	}
 

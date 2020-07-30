@@ -19,6 +19,7 @@ public class AskMoreArgumentProvider {
 	public static final String ARGUMENT_COMMAND_LINE = "cmdLine";
 	public static final String ARGUMENT_DIALOG_TITLE = "dialogTitle";
 	public static final String ARGUMENT_ELEMENT_LOCATION = "elementLocation";
+	public static final String ARGUMENT_EXTERNAL_PARAMS = "externalParams";
 	public static final String ARGUMENT_FRAGMENT = "fragment";
 	public static final String ARGUMENT_GO_TO_NEXT_EDITABLE_POSITION = "goToNextEditablePosition";
 	public static final String ARGUMENT_INSERT_LOCATION = "insertLocation";
@@ -98,6 +99,17 @@ public class AskMoreArgumentProvider {
 		);
 	}
 	
+	public static ArgumentDescriptor getAnnotatedResultsViewMessageArgumentDescriptor(String defaultValue) {
+		return new ArgumentDescriptor(
+				ARGUMENT_MESSAGE,
+				ArgumentDescriptor.TYPE_STRING, 
+				"The Message displayed in the results view tab for each element."
+						+ "You may build part(s) of the message dynamically from each contxt node by using the annotation $$XPATH( xpath )$$ where xpath denotes"
+						+ " an XPath expression relative to the result(s) of the param '" + AskMoreArgumentProvider.ARGUMENT_ELEMENT_LOCATION + "'.",
+				defaultValue
+		);
+	}
+	
 	public static ArgumentDescriptor getResultsViewMessageArgumentDescriptor(String defaultValue) {
 		return new ArgumentDescriptor(
 				ARGUMENT_MESSAGE,
@@ -116,6 +128,17 @@ public class AskMoreArgumentProvider {
 						AuthorConstants.ARG_VALUE_TRUE, 
 						AuthorConstants.ARG_VALUE_FALSE},
 				AuthorConstants.ARG_VALUE_TRUE
+		);
+	}
+	
+	public static ArgumentDescriptor getSelectAnnotatedElementLocationArgumentDescriptor() {
+		return new ArgumentDescriptor(
+				ARGUMENT_ELEMENT_LOCATION, 
+				ArgumentDescriptor.TYPE_XPATH_EXPRESSION, 
+				"An XPath expression indicating the element or elements that shall be selected.\n"
+					+	"Note: If this is not defined then the element at the caret position will be used.\n"
+					+ 	AskMoreAnnotationParser.getDescription(),
+				"."
 		);
 	}
 	
