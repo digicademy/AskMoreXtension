@@ -82,7 +82,7 @@ public class InsertAnnotatedFragmentToSelectionOperation extends InsertFragmentO
 			parsedFragment = InputDialogUtils.replaceAnnotationsWithUserInput(parsedFragment);
 		} catch (InputDialogClosedException e) {
 			// abort action if user closes the dialog
-			return;
+			throw new IllegalArgumentException(AskMoreArgumentProvider.getClosedDialogMessage());
 		}
 		
 		// get other params

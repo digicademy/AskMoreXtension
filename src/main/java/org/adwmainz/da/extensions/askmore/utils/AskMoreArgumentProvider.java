@@ -160,4 +160,11 @@ public class AskMoreArgumentProvider {
 				AuthorConstants.ARG_VALUE_FALSE
 		);
 	};
+	
+	// other methods
+	public static String getClosedDialogMessage() {
+		ResourceBundle rb = ResourceBundle.getBundle("org.adwmainz.da.extensions.askmore.resources.DialogTextBundle");
+		return rb.getString("INPUT_DIALOG_CLOSED");
+	}
+	
 }

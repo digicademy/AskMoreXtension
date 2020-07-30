@@ -78,7 +78,7 @@ public class SurroundWithAnnotatedFragmentOperation extends SurroundWithFragment
 			parsedFragment = InputDialogUtils.replaceAnnotationsWithUserInput(ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_FRAGMENT));
 		} catch (InputDialogClosedException e) {
 			// abort action if user closes the dialog
-			return;
+			throw new IllegalArgumentException(AskMoreArgumentProvider.getClosedDialogMessage());
 		}
 		
 		// get document controller and editor access

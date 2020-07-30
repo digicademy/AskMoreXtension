@@ -98,7 +98,7 @@ public class ChooseActionOperation implements AuthorOperation {
 			actionsProvider.invokeAction(selectedOption.getRealValue());
 		} catch (InputDialogClosedException e) {
 			// abort action if user closes the dialog
-			return;
+			throw new IllegalArgumentException(AskMoreArgumentProvider.getClosedDialogMessage());
 		}
 	}
 

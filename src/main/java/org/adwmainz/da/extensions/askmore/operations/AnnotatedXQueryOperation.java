@@ -71,7 +71,7 @@ public class AnnotatedXQueryOperation extends XQueryOperation {
 			super.doOperation(authorAccess, parsedArgs);
 		} catch (InputDialogClosedException e) {
 			// abort action if user closes the dialog
-			return;
+			throw new IllegalArgumentException(AskMoreArgumentProvider.getClosedDialogMessage());
 		}
 	}
 
