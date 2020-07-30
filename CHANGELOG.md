@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2020-07-30
+
+### Added
+- added class org.adwmainz.da.extensions.askmore.operations.AnnotatedXQueryUpdateOperation.java
+- added new helper class org.adwmainz.da.extensions.askmore.factories.PositionedInfoFactory.java
+- added new helper class org.adwmainz.da.extensions.askmore.utils.RegexUtils.java
+- added new helper class org.adwmainz.da.extensions.askmore.utils.XPathAnnotationParser.java
+- added new helper methods to org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils.java
+- added new helper methods to org.adwmainz.da.extensions.askmore.utils.ArgumentParser.java
+- added new helper methods to org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider.java
+- added localized default value INPUT_DIALOG_CLOSED
+- added AskMoreAnnotation parsing to param elementLocation of class org.adwmainz.da.extensions.askmore.operations.DisplayInResultsViewOperation
+- added XPathAnnotation parsing to param message of class org.adwmainz.da.extensions.askmore.operations.DisplayInResultsViewOperation
+- added AskMoreAnnotation parsing to param externalParams of class org.adwmainz.da.extensions.askmore.operations.AnnotatedXSLTOperation
+- added AskMoreAnnotation parsing to param externalParams of class org.adwmainz.da.extensions.askmore.operations.AnnotatedXQueryOperation
+
+### Fixed
+- fixed org.adwmainz.da.extensions.askmore.operations.\*.java#doOperation() to throw an exception if the generated input dialog is closed
+- fixed method org.adwmainz.da.extensions.askmore.operations.DisplayInResultsViewOperation#doOperation() to be able to handle non-node XPath results
+
+
 ## [1.2.0] - 2020-05-14
 
 ### Added
