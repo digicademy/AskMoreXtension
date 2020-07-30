@@ -17,7 +17,6 @@ import org.adwmainz.da.extensions.askmore.utils.APIAccessUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreAnnotationParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
-import org.adwmainz.da.extensions.askmore.utils.InputDialogUtils;
 
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
 import ro.sync.ecss.extensions.api.ArgumentsMap;
@@ -77,9 +76,9 @@ public class InsertAnnotatedFragmentToSelectionOperation extends InsertFragmentO
 	@Override
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args)
 			throws IllegalArgumentException, AuthorOperationException {
-		String parsedFragment = ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_FRAGMENT);
+		String parsedFragment;
 		try {
-			parsedFragment = InputDialogUtils.replaceAnnotationsWithUserInput(parsedFragment);
+			parsedFragment = ArgumentParser.getValidStringWithUserInput(args, AskMoreArgumentProvider.ARGUMENT_FRAGMENT);
 		} catch (InputDialogClosedException e) {
 			// abort action if user closes the dialog
 			throw new IllegalArgumentException(AskMoreArgumentProvider.getClosedDialogMessage());

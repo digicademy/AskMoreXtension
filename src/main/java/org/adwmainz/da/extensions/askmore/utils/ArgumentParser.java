@@ -11,6 +11,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
+import org.adwmainz.da.extensions.askmore.models.HashedArgumentsMap;
+
 import ro.sync.ecss.extensions.api.ArgumentsMap;
 import ro.sync.ecss.extensions.api.AuthorConstants;
 
@@ -45,6 +48,30 @@ public class ArgumentParser {
 		} catch (IllegalArgumentException e) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * Returns a valid String argument value of an AuthorOperation by replacing AskMoreAnnotations with user input
+	 * @param args the ArgumentMap of the operation
+	 * @param argumentName the name of the argument
+	 * @throws IllegalArgumentException if the given argument is empty or otherwise invalid
+	 * @throws InputDialogClosedException if the input dialog is closed
+	 */
+	public static String getValidStringWithUserInput(ArgumentsMap args, String argumentName) throws IllegalArgumentException, InputDialogClosedException {
+		String argValue = getValidString(args, argumentName);
+		return InputDialogUtils.replaceAnnotationsWithUserInput(argValue);
+	}
+	
+	/**
+	 * Returns a valid String argument value of an AuthorOperation using a default value by replacing AskMoreAnnotations with user input
+	 * @param args the ArgumentMap of the operation
+	 * @param argumentName the name of the argument
+	 * @param defaultValue the value to be returned if the specified argument is empty or otherwise invalid
+	 * @throws InputDialogClosedException if the input dialog is closed
+	 */
+	public static String getValidStringWithUserInput(ArgumentsMap args, String argumentName, String defaultValue) throws InputDialogClosedException {
+		String argValue = getValidString(args, argumentName, defaultValue);
+		return InputDialogUtils.replaceAnnotationsWithUserInput(argValue);
 	}
 
 	/**
@@ -163,6 +190,30 @@ public class ArgumentParser {
 	 */
 	public static Map<String,String> validateMappedArgs(ArgumentsMap args, String keyArgumentName, String valueArgumentName) throws IllegalArgumentException {
 		return getValidMap(args, keyArgumentName, valueArgumentName, "\n");
+	}
+	
+	/**
+	 * Updates a HashedArgumentsMap by replacing AskMoreAnnotations within a specified argument with user input
+	 * @param args a HashedArgumentsMap
+	 * @param argumentName the name of the argument
+	 * @throws IllegalArgumentException if the given argument is empty or otherwise invalid
+	 * @throws InputDialogClosedException if the input dialog is closed
+	 */
+	public static void replaceAnnotationsWithUserInput(HashedArgumentsMap args, String argumentName) throws IllegalArgumentException, InputDialogClosedException {
+		String parsedArgValue = getValidStringWithUserInput(args, argumentName);
+		args.put(argumentName, parsedArgValue);
+	}
+	
+	/**
+	 * Updates a HashedArgumentsMap by replacing AskMoreAnnotations within a specified argument with user input using a default value
+	 * @param args a HashedArgumentsMap
+	 * @param argumentName the name of the argument
+	 * @param defaultValue the value to be returned if the specified argument is empty or otherwise invalid
+	 * @throws InputDialogClosedException if the input dialog is closed
+	 */
+	public static void replaceAnnotationsWithUserInput(HashedArgumentsMap args, String argumentName, String defaultValue) throws InputDialogClosedException {
+		String parsedArgValue = getValidStringWithUserInput(args, argumentName, defaultValue);
+		args.put(argumentName, parsedArgValue);
 	}
 	
 }

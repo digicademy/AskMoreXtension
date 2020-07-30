@@ -8,13 +8,10 @@
 package org.adwmainz.da.extensions.askmore.operations;
 
 import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
-import org.adwmainz.da.extensions.askmore.models.EditableArgumentDescriptor;
 import org.adwmainz.da.extensions.askmore.models.HashedArgumentsMap;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
-import org.adwmainz.da.extensions.askmore.utils.AskMoreAnnotationParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
-import org.adwmainz.da.extensions.askmore.utils.InputDialogUtils;
 
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
 import ro.sync.ecss.extensions.api.ArgumentsMap;
@@ -34,21 +31,8 @@ public class AnnotatedCommandLineOperation extends ExecuteCommandLineOperation {
 	public AnnotatedCommandLineOperation() {
 		super();
 		
-		// derive arguments from arguments of super class
-		ArgumentDescriptor[] basicArguments = super.getArguments();
-		arguments = new ArgumentDescriptor[basicArguments.length];
-		for (int i=0; i<basicArguments.length; ++i) {
-			// get basic argument
-			ArgumentDescriptor basicArgument = basicArguments[i];
-			EditableArgumentDescriptor derivedArgument = EditableArgumentDescriptor.copyOf(basicArgument);
-			
-			// add description of how to use AskMoreAnnotations to ARGUMENT_COMMAND_LINE
-			if (basicArgument.getName().equals(AskMoreArgumentProvider.ARGUMENT_COMMAND_LINE))
-				derivedArgument.setDescription(basicArgument.getDescription()+"\n"+AskMoreAnnotationParser.getDescription());
-			
-			// set argument
-			arguments[i] = derivedArgument;
-		}
+		// derive arguments from arguments of super class by adding descriptions to ARGUMENT_COMMAND_LINE
+		arguments = ArgumentDescriptorUtils.addAskMoreAnnotationDescriptions(super.getArguments(), AskMoreArgumentProvider.ARGUMENT_COMMAND_LINE);
 	}
 
 	// overridden methods
@@ -63,9 +47,8 @@ public class AnnotatedCommandLineOperation extends ExecuteCommandLineOperation {
 		HashedArgumentsMap parsedArgs = new HashedArgumentsMap(args, ArgumentDescriptorUtils.getArgumentNames(arguments));
 		
 		try {
-			// configure ARGUMENT_SCRIPT with an input dialog
-			String parsedCommand = InputDialogUtils.replaceAnnotationsWithUserInput(ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_COMMAND_LINE));
-			parsedArgs.put(AskMoreArgumentProvider.ARGUMENT_COMMAND_LINE, parsedCommand);
+			// parse annotated argument
+			ArgumentParser.replaceAnnotationsWithUserInput(parsedArgs, AskMoreArgumentProvider.ARGUMENT_COMMAND_LINE);
 			
 			// invoke main operation from super class
 			super.doOperation(authorAccess, parsedArgs);

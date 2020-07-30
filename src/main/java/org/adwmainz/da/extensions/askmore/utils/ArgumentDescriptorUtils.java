@@ -7,7 +7,10 @@
 package org.adwmainz.da.extensions.askmore.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import org.adwmainz.da.extensions.askmore.models.EditableArgumentDescriptor;
 
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
 
@@ -92,6 +95,44 @@ public class ArgumentDescriptorUtils {
 		for (ArgumentDescriptor argument: arguments)
 			argumentNames.add(argument.getName());
 		return argumentNames;
+	}
+	
+	/**
+	 * Adds the description of how to use AskMoreAnnotations to the arguments with the given names
+	 * @param arguments an array of ArgumentDescriptors that should be updated
+	 * @param argumentNames the names of the arguments that should be updated
+	 * @return the updated array of ArgumentDescriptors
+	 */
+	public static ArgumentDescriptor[] addAskMoreAnnotationDescriptions(ArgumentDescriptor[] arguments, String... argumentNames) {
+		List<String> argumentNameList = Arrays.asList(argumentNames);
+		
+		// iterate over arguments
+		ArgumentDescriptor[] derivedArguments = new ArgumentDescriptor[arguments.length];
+		for (int i=0; i<arguments.length; ++i) {
+			// get basic argument
+			ArgumentDescriptor basicArgument = arguments[i];
+			
+			if (argumentNameList.contains(basicArgument.getName()))
+				// add description of how to use AskMoreAnnotations to the specified arguments
+				derivedArguments[i] = addAskMoreAnnotationDescription(basicArgument);
+			else
+				// set argument
+				derivedArguments[i] = basicArgument;
+		}
+		arguments = derivedArguments;
+		return arguments;
+	}
+	
+	/**
+	 * Adds the description of how to use AskMoreAnnotations to the given argument
+	 * @param argument the ArgumentDescriptor that should be updated
+	 * @return the updated ArgumentDescriptor
+	 */
+	public static ArgumentDescriptor addAskMoreAnnotationDescription(ArgumentDescriptor argument) {
+		EditableArgumentDescriptor derivedArgument = EditableArgumentDescriptor.copyOf(argument);
+		derivedArgument.setDescription(argument.getDescription()+"\n"+AskMoreAnnotationParser.getDescription());
+		argument = derivedArgument;
+		return argument;
 	}
 
 }

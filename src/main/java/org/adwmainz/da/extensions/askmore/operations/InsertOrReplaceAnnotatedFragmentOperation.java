@@ -9,13 +9,10 @@
 package org.adwmainz.da.extensions.askmore.operations;
 
 import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
-import org.adwmainz.da.extensions.askmore.models.EditableArgumentDescriptor;
 import org.adwmainz.da.extensions.askmore.models.HashedArgumentsMap;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
-import org.adwmainz.da.extensions.askmore.utils.AskMoreAnnotationParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
-import org.adwmainz.da.extensions.askmore.utils.InputDialogUtils;
 
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
 import ro.sync.ecss.extensions.api.ArgumentsMap;
@@ -37,22 +34,10 @@ public class InsertOrReplaceAnnotatedFragmentOperation extends InsertOrReplaceFr
 		super();
 		
 		// derive arguments from arguments of super class
-		ArgumentDescriptor[] basicArguments = super.getArguments();
-		arguments = new ArgumentDescriptor[basicArguments.length + 1];
-		for (int i=0; i<basicArguments.length; ++i) {
-			// get basic argument
-			ArgumentDescriptor basicArgument = basicArguments[i];
-			EditableArgumentDescriptor derivedArgument = EditableArgumentDescriptor.copyOf(basicArgument);
-			
-			// add description of how to use AskMoreAnnotations to ARGUMENT_FRAGMENT
-			if (basicArgument.getName().equals(AskMoreArgumentProvider.ARGUMENT_FRAGMENT))
-				derivedArgument.setDescription(basicArgument.getDescription()+"\n"+AskMoreAnnotationParser.getDescription());
-			
-			// set argument
-			arguments[i] = derivedArgument;
-		}
+		ArgumentDescriptor[] basicArguments = ArgumentDescriptorUtils.addAskMoreAnnotationDescriptions(super.getArguments(), AskMoreArgumentProvider.ARGUMENT_FRAGMENT);
 		
 		// add custom argument
+		arguments = new ArgumentDescriptor[basicArguments.length + 1];
 		arguments[basicArguments.length] = AskMoreArgumentProvider.getRemoveSelectionArgumentDescriptor();
 	}
 
@@ -69,9 +54,7 @@ public class InsertOrReplaceAnnotatedFragmentOperation extends InsertOrReplaceFr
 		HashedArgumentsMap parsedArgs = new HashedArgumentsMap(args, ArgumentDescriptorUtils.getArgumentNames(arguments));
 		
 		try {
-			// configure ARGUMENT_FRAGMENT with an input dialog
-			String parsedFragment = InputDialogUtils.replaceAnnotationsWithUserInput(ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_FRAGMENT));
-			parsedArgs.put(AskMoreArgumentProvider.ARGUMENT_FRAGMENT, parsedFragment);
+			ArgumentParser.replaceAnnotationsWithUserInput(parsedArgs, AskMoreArgumentProvider.ARGUMENT_FRAGMENT);
 			
 			// invoke main operation from super class
 			if (!removeSelection) {

@@ -8,13 +8,10 @@
 package org.adwmainz.da.extensions.askmore.operations;
 
 import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
-import org.adwmainz.da.extensions.askmore.models.EditableArgumentDescriptor;
 import org.adwmainz.da.extensions.askmore.models.HashedArgumentsMap;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
-import org.adwmainz.da.extensions.askmore.utils.AskMoreAnnotationParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
-import org.adwmainz.da.extensions.askmore.utils.InputDialogUtils;
 
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
 import ro.sync.ecss.extensions.api.ArgumentsMap;
@@ -34,21 +31,8 @@ public class AnnotatedXQueryOperation extends XQueryOperation {
 	public AnnotatedXQueryOperation() {
 		super();
 		
-		// derive arguments from arguments of super class
-		ArgumentDescriptor[] basicArguments = super.getArguments();
-		arguments = new ArgumentDescriptor[basicArguments.length];
-		for (int i=0; i<basicArguments.length; ++i) {
-			// get basic argument
-			ArgumentDescriptor basicArgument = basicArguments[i];
-			EditableArgumentDescriptor derivedArgument = EditableArgumentDescriptor.copyOf(basicArgument);
-			
-			// add description of how to use AskMoreAnnotations to ARGUMENT_SCRIPT
-			if (basicArgument.getName().equals(AskMoreArgumentProvider.ARGUMENT_SCRIPT))
-				derivedArgument.setDescription(basicArgument.getDescription()+"\n"+AskMoreAnnotationParser.getDescription());
-			
-			// set argument
-			arguments[i] = derivedArgument;
-		}
+		// derive arguments from arguments of super class by adding descriptions to ARGUMENT_SCRIPT and ARGUMENT_EXTERNAL_PARAMS
+		arguments = ArgumentDescriptorUtils.addAskMoreAnnotationDescriptions(super.getArguments(), AskMoreArgumentProvider.ARGUMENT_SCRIPT, AskMoreArgumentProvider.ARGUMENT_EXTERNAL_PARAMS);
 	}
 
 	// overridden methods
@@ -63,9 +47,9 @@ public class AnnotatedXQueryOperation extends XQueryOperation {
 		HashedArgumentsMap parsedArgs = new HashedArgumentsMap(args, ArgumentDescriptorUtils.getArgumentNames(arguments));
 		
 		try {
-			// configure ARGUMENT_SCRIPT with an input dialog
-			String parsedScript = InputDialogUtils.replaceAnnotationsWithUserInput(ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_SCRIPT));
-			parsedArgs.put(AskMoreArgumentProvider.ARGUMENT_SCRIPT, parsedScript);
+			// parse annotated arguments
+			ArgumentParser.replaceAnnotationsWithUserInput(parsedArgs, AskMoreArgumentProvider.ARGUMENT_SCRIPT);
+			ArgumentParser.replaceAnnotationsWithUserInput(parsedArgs, AskMoreArgumentProvider.ARGUMENT_EXTERNAL_PARAMS);
 			
 			// invoke main operation from super class
 			super.doOperation(authorAccess, parsedArgs);

@@ -16,7 +16,6 @@ import org.adwmainz.da.extensions.askmore.utils.ArgumentDescriptorUtils;
 import org.adwmainz.da.extensions.askmore.utils.ArgumentParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreAnnotationParser;
 import org.adwmainz.da.extensions.askmore.utils.AskMoreArgumentProvider;
-import org.adwmainz.da.extensions.askmore.utils.InputDialogUtils;
 import org.adwmainz.da.extensions.askmore.utils.APIAccessUtils;
 
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
@@ -75,7 +74,7 @@ public class SurroundWithAnnotatedFragmentOperation extends SurroundWithFragment
 		// configure ARGUMENT_FRAGMENT with an input dialog
 		String parsedFragment;
 		try {
-			parsedFragment = InputDialogUtils.replaceAnnotationsWithUserInput(ArgumentParser.getValidString(args, AskMoreArgumentProvider.ARGUMENT_FRAGMENT));
+			parsedFragment = ArgumentParser.getValidStringWithUserInput(args, AskMoreArgumentProvider.ARGUMENT_FRAGMENT);
 		} catch (InputDialogClosedException e) {
 			// abort action if user closes the dialog
 			throw new IllegalArgumentException(AskMoreArgumentProvider.getClosedDialogMessage());

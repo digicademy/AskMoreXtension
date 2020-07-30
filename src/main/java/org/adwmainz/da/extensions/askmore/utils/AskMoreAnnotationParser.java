@@ -7,7 +7,6 @@
  */
 package org.adwmainz.da.extensions.askmore.utils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -40,23 +39,16 @@ public class AskMoreAnnotationParser {
 	protected static final String CONTAINS_WHITESPACE_PATTERN = ".*?\\s+.*?";
 	
 	/**
-	 * Returns a List of serialized AskMoreAnnotations from an annotated String
-	 * @param annotatedText a String that may contain serialized annotations 
+	 * Returns a List of AskMoreAnnotations from an annotated String
+	 * @param annotatedText a String that may contain AskMoreAnnotations
 	 */
 	public static List<String> findAnnotations(String annotatedText) {
-		List<String> askMoreAnnotations = new ArrayList<>();
-		// iterate over matches
-		Matcher matcher = Pattern.compile(ASK_MORE_ANNOTATION_PATTERN).matcher(annotatedText);
-		while (matcher.find())
-			askMoreAnnotations.add(matcher.group(0));
-		
-		return askMoreAnnotations;
+		return RegexUtils.getMatches(annotatedText, ASK_MORE_ANNOTATION_PATTERN);
 	}
 	
 	/**
-	 * Creates a Map of labels and input fields that may be used as the dialog model of an DynamicTextInputDialogDeserializes from a list of serialized
-	 *  AskMoreAnnotations
-	 * @param askMoreAnnotations a list of serialized annotations
+	 * Creates a Map of labels and input fields that may be used as the dialog model of an DynamicTextInputDialogDeserializes from a List of AskMoreAnnotations
+	 * @param askMoreAnnotations a List of AskMoreAnnotations (c.f. {@link #getDescription()})
 	 */
 	public static Map<String, BasicInputField<String>> createDialogModel(List<String> askMoreAnnotations) {
 		Map<String, BasicInputField<String>> dialogModel = new LinkedHashMap<>();
@@ -155,8 +147,8 @@ public class AskMoreAnnotationParser {
 
 	/**
 	 * Replaces all AskMoreAnnotations in a given String with the specified user input
-	 * @param annotatedText a String that may contain serialized annotations 
-	 * @param askMoreAnnotations a list of serialized annotations
+	 * @param annotatedText a String that may contain AskMoreAnnotations (c.f. {@link #getDescription()})
+	 * @param askMoreAnnotations a list of AskMoreAnnotations (c.f. {@link #getDescription()})
 	 * @param userInput user input from a dialog created from the specified list of serialized annotations
 	 * @return
 	 */
