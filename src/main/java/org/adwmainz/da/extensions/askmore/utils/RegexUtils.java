@@ -12,20 +12,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class RegexUtils {
-	
+
 	/**
 	 * Returns all substrings of a given String that match a given regex pattern
 	 * @param str a String
 	 * @param pattern a regex pattern
 	 */
-	protected static List<String> getMatches(String str, String pattern) {
+	public static List<String> getMatches(String str, String pattern) {
 		List<String> matches = new ArrayList<>();
 		Matcher matcher = Pattern.compile(pattern).matcher(str);
 		while (matcher.find())
 			matches.add(matcher.group(0));
 		return matches;
 	}
-	
+
 	/**
 	 * Returns the first substring of a given String that matches the nth group of n regex pattern
 	 * @param str a String
@@ -33,11 +33,11 @@ public abstract class RegexUtils {
 	 * @param groupNo the number of the group to be returned
 	 * @throws IllegalArgumentException if there is no nth group
 	 */
-	protected static String getFirstMatch(String str, String pattern, int groupNo) throws IllegalArgumentException {
+	public static String getFirstMatch(String str, String pattern, int groupNo) throws IllegalArgumentException {
 		Matcher matcher = Pattern.compile(pattern).matcher(str);
 		if (matcher.find())
 			return matcher.group(groupNo);
 		throw new IllegalArgumentException("Could not find the group with the number " +groupNo + " in "+ str);
 	}
-	
+
 }
