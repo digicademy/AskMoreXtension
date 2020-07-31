@@ -47,15 +47,17 @@ public class SurroundWithAnnotatedFragmentOperation extends SurroundWithFragment
 		for (int i=0; i<basicArguments.length; ++i) {
 			// get basic argument
 			ArgumentDescriptor basicArgument = basicArguments[i];
-			EditableArgumentDescriptor derivedArgument = EditableArgumentDescriptor.copyOf(basicArgument);
 			
-			// add description of how to use AskMoreAnnotations to ARGUMENT_FRAGMENT
-			if (basicArgument.getName().equals(AskMoreArgumentProvider.ARGUMENT_FRAGMENT))
+			if (basicArgument.getName().equals(AskMoreArgumentProvider.ARGUMENT_FRAGMENT)) {
+				// add description of how to use AskMoreAnnotations to ARGUMENT_FRAGMENT
+				EditableArgumentDescriptor derivedArgument = EditableArgumentDescriptor.copyOf(basicArgument);
 				derivedArgument.setDescription("The fragment to surround with. The text to be surrounded will become the first leaf per default but you"
 						+ " may specify a different position using the annotation "+destinationAnnotation+".\n"+AskMoreAnnotationParser.getDescription());
-			
-			// set argument
-			arguments[i] = derivedArgument;
+				arguments[i] = derivedArgument;
+			} else {
+				// use basic argument
+				arguments[i] = basicArgument;
+			}
 		}
 	}
 

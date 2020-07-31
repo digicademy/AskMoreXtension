@@ -38,6 +38,8 @@ public class InsertOrReplaceAnnotatedFragmentOperation extends InsertOrReplaceFr
 		
 		// add custom argument
 		arguments = new ArgumentDescriptor[basicArguments.length + 1];
+		for (int i=0; i<basicArguments.length; ++i)
+			arguments[i] = basicArguments[i];
 		arguments[basicArguments.length] = AskMoreArgumentProvider.getRemoveSelectionArgumentDescriptor();
 	}
 
