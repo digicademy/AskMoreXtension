@@ -6,7 +6,7 @@ This software package provides eight Java operations developed at the Digital Ac
 
 
 # Requirements
-The AskMoreXtension was developed and tested to be used with the versions 19.1 to 21.0 of the [Oxygen XML Editor](https://www.oxygenxml.com/).
+The AskMoreXtension was developed and tested to be used with the versions 19.1 to 24.0 of the [Oxygen XML Editor](https://www.oxygenxml.com/).
 
 
 # Download and Installation

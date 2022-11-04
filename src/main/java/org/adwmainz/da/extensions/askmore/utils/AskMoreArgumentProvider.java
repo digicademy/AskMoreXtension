@@ -25,6 +25,7 @@ public class AskMoreArgumentProvider {
 	public static final String ARGUMENT_INSERT_LOCATION = "insertLocation";
 	public static final String ARGUMENT_INSERT_LOCATION_RESTRICTION = "insertLocationRestriction";
 	public static final String ARGUMENT_INSERT_POSITION = "insertPosition";
+	public static final String ARGUMENT_LOCATION_RESTRICTION = "locationRestriction";
 	public static final String ARGUMENT_MESSAGE = "message";
 	public static final String ARGUMENT_NO_RESULT_MESSAGE = "noResultMessage";
 	public static final String ARGUMENT_NOTIFY_USER = "notifyUser";
