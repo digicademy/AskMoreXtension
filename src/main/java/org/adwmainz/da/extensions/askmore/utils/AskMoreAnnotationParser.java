@@ -67,8 +67,6 @@ public class AskMoreAnnotationParser {
 				if (optionGroup != null && !optionGroup.isEmpty()) {
 					String[] encodedOptions = matcher.group(2).split("(?<=\" ?),");
 					for (String encodedOption: encodedOptions) {
-						encodedOption = StringUtils.removeEnclosingQuotes(encodedOption);
-						encodedOption = StringUtils.removeEscapedQuotes(encodedOption);
 						options.add(SelectableOptionFactory.createOption(encodedOption, "|", true, true));
 					}
 				}

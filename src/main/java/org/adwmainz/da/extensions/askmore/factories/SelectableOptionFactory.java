@@ -25,7 +25,7 @@ public class SelectableOptionFactory {
 	 * (i.e. <code>"real|rendered"</code> vs. <code>"rendered|real"</code>))
 	 */
 	public static SelectableOption<String> createOption(String serializedOption, CharSequence delimiter, boolean realValueFirst, boolean reduceWhitespace) {
-		String[] values = serializedOption.split(Pattern.quote(""+delimiter));
+		String[] values = serializedOption.split(Pattern.quote("\""+delimiter+"\""));
 		switch (values.length) {
 			case 1:
 				if (reduceWhitespace)
@@ -33,8 +33,8 @@ public class SelectableOptionFactory {
 				return new SelectableOption<String>(serializedOption);
 			case 2:
 				// get values
-				String realValue = realValueFirst ? values[0] : values[1];
-				String renderedValue = realValueFirst ? values[1] : values[0];
+				String realValue = StringUtils.removeEnclosingQuotes(realValueFirst ? values[0] : values[1]);
+				String renderedValue = StringUtils.removeEnclosingQuotes(realValueFirst ? values[1] : values[0]);
 				
 				// reduce whitespace
 				if (reduceWhitespace) {
@@ -43,7 +43,7 @@ public class SelectableOptionFactory {
 				}
 				
 				// return option
-				return new SelectableOption<String>(realValue, renderedValue);
+				return new SelectableOption<String>(StringUtils.removeEscapedQuotes(realValue), StringUtils.removeEscapedQuotes(renderedValue));
 			default:
 				throw new IllegalArgumentException("Could not parse "+serializedOption);
 		}
