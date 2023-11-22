@@ -17,7 +17,7 @@ public class SelectableOption<T> implements Comparable<SelectableOption<T>> {
 	/**
 	 * Creates a new SelectableOption that does not differentiate between a real and a rendered value
 	 * @param realValue the real value of this SelectionOption
-	 *  <br/>(the rendered value will be generated using its <code>toString()</code> method)
+	 *  <br>(the rendered value will be generated using its <code>toString()</code> method)
 	 */
 	public SelectableOption(T realValue) {
 		this.realValue = realValue;

@@ -33,7 +33,7 @@ public class SingleSelectionDialog<T> extends BasicInputDialog<T> {
 	/**
 	 * Creates a new SingleSelectionDialog with the specified params and a default alignment (i.e. the selection form control is aligned to the left with a
 	 *  vertical alignment set to <code>Alignment.BASELINE</code> while the main buttons (OK/CANCEL) are aligned to the right). 
-	 * <br/><br/>Please use the <code>setLabelText()</code> method to add a label
+	 * <br>Please use the <code>setLabelText()</code> method to add a label
 	 * @param owner the Frame from which the dialog is displayed
 	 * @param isModal specifies whether the dialog blocks user input to other top-level windows when shown
 	 * @param options a list of options that should be selectable
@@ -45,7 +45,7 @@ public class SingleSelectionDialog<T> extends BasicInputDialog<T> {
 	
 	/**
 	 * Creates a new SingleSelectionDialog with the specified params
-	 * <br/><br/>Please use the <code>setLabelText()</code> method to add a label
+	 * <br>Please use the <code>setLabelText()</code> method to add a label
 	 * @param owner the Frame from which the dialog is displayed
 	 * @param isModal specifies whether the dialog blocks user input to other top-level windows when shown
 	 * @param horizontalAlignment specifies the horizontal alignment of the selection form control. Use <code>Alignment.LEADING</code> to left indent,
@@ -62,7 +62,7 @@ public class SingleSelectionDialog<T> extends BasicInputDialog<T> {
 	
 	/**
 	 * Creates a new SingleSelectionDialog with the specified params
-	 * <br/><br/>Please use the <code>setLabelText()</code> method to add a label
+	 * <br>Please use the <code>setLabelText()</code> method to add a label
 	 * @param owner the Frame from which the dialog is displayed
 	 * @param isModal specifies whether the dialog blocks user input to other top-level windows when shown
 	 * @param horizontalFormGroupAlignment specifies the horizontal alignment of the selection form control. Use <code>Alignment.LEADING</code> to left indent,
@@ -90,7 +90,7 @@ public class SingleSelectionDialog<T> extends BasicInputDialog<T> {
 	// other overridden methods
 	/**
 	 * Initializes all components and positions them
-	 * <br /><br />Use <code>addLabel()</code> before invoking this method to add a label to this dialog
+	 * <br>Use <code>addLabel()</code> before invoking this method to add a label to this dialog
 	 */
 	@Override
 	public void initComponents() {		
@@ -124,7 +124,7 @@ public class SingleSelectionDialog<T> extends BasicInputDialog<T> {
 	// additional method
 	/**
 	 * Adds a label with the specified text next to the selection form control
-	 * <br /></br />Must be invoked before the method <code>initComponents()</code> is invoked
+	 * <br>Must be invoked before the method <code>initComponents()</code> is invoked
 	 * @param labelText the text that should displayed on the label next to the selection form control
 	 */
 	public void addLabel(String labelText) {

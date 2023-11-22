@@ -110,7 +110,7 @@ public abstract class BasicInputDialog<T> extends JDialog implements ActionListe
 	
 	/**
 	 * Changes the text displayed on the OK button
-	 * <br /></br />Must be invoked before the method <code>initComponents()</code> is invoked
+	 * <br>Must be invoked before the method <code>initComponents()</code> is invoked
 	 * @param okButtonText
 	 */
 	public void setOkButtonText(String okButtonText) {
@@ -119,7 +119,7 @@ public abstract class BasicInputDialog<T> extends JDialog implements ActionListe
 
 	/**
 	 * Changes the text displayed on the CANCEL button
-	 * <br /></br />Must be invoked before the method <code>initComponents()</code> is invoked
+	 * <br>Must be invoked before the method <code>initComponents()</code> is invoked
 	 * @param cancelButtonText
 	 */
 	public void setCancelBtnTxt(String cancelButtonText) {

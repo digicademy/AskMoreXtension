@@ -9,14 +9,14 @@ package org.adwmainz.da.extensions.askmore.utils;
 public class XMLUtils {
 
 	/**
-	 * Returns an array of all XML special chars (i.e. &, <, >, ', ")
+	 * Returns an array of all XML special chars (i.e. &amp;, &lt;, &gt;, ', ")
 	 */
 	public static char[] getSpecialChars() {
 		return new char[] {'&', '<', '>', '\'', '"'};
 	}
 	
 	/**
-	 * Returns a String in which all XML special chars (&, <, >, ', ") are replaced by their escaped 
+	 * Returns a String in which all XML special chars (&amp;, &lt;, &gt;, ', ") are replaced by their escaped 
 	 * references (e.g. <code>&amp;</code>)
 	 * @param str a String with unescaped xml special chars
 	 */

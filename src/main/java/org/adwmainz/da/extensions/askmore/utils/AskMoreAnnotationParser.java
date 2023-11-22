@@ -107,7 +107,7 @@ public class AskMoreAnnotationParser {
 	/**
 	 * Creates a subclass of a VerboseInputVerifier from a specified flag
 	 * @param flag a flag representing a specific subclass of a VerboseInputVerifier
-	 *  <br />The allowed values are: <code>!REGEX("regex")</code>, <code>!NO_XML</code>, <code>!NO_SPACE</code> and <code>!POS_INT</code>
+	 *  <br>The allowed values are: <code>!REGEX("regex")</code>, <code>!NO_XML</code>, <code>!NO_SPACE</code> and <code>!POS_INT</code>
 	 * @return
 	 * @throws IllegalArgumentException
 	 */

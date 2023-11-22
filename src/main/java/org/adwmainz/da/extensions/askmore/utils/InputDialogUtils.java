@@ -127,7 +127,7 @@ public class InputDialogUtils {
 	/**
 	 * Returns the int representation of the specified severity
 	 * @param severityName the name of a severity
-	 *  <br />The allowed values are: <code>Info</code>, <code>Warning</code>, <code>Error</code> and <code>Fatal</code>
+	 *  <br>The allowed values are: <code>Info</code>, <code>Warning</code>, <code>Error</code> and <code>Fatal</code>
 	 * @throws IllegalArgumentException if <code>severityName</code> is not one of the mentioned values 
 	 */
 	public static int getMessageType(String severityName) throws IllegalArgumentException {

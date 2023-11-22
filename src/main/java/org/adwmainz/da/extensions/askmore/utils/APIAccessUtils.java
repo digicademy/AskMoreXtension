@@ -78,7 +78,7 @@ public class APIAccessUtils {
 	/**
 	 * Returns the int representation of the specified severity
 	 * @param severityName the name of a severity
-	 *  <br />The allowed values are: <code>Info</code>, <code>Warning</code>, <code>Error</code> and <code>Fatal</code>
+	 *  <br>The allowed values are: <code>Info</code>, <code>Warning</code>, <code>Error</code> and <code>Fatal</code>
 	 * @throws IllegalArgumentException if <code>severityName</code> is not one of the mentioned values
 	 */
 	public static int getSeverity(String severityName) throws IllegalArgumentException {
@@ -97,7 +97,7 @@ public class APIAccessUtils {
 	}
 
 	/**
-	 * Returns a serialized form of XPath results (i.e. serialized XML if the result type is <code>node()</node> and plain text otherwise)
+	 * Returns a serialized form of XPath results (i.e. serialized XML if the result type is <code>node()</code> and plain text otherwise)
 	 * @param documentController the current AuthorDocumentController
 	 * @param xPathExpression an XPath expression
 	 * @throws AuthorOperationException if the xPathExpression is invalid or the results cannot be serialized
@@ -109,7 +109,7 @@ public class APIAccessUtils {
 	}
 
 	/**
-	 * Returns a serialized form of XPath results (i.e. serialized XML if the result type is <code>node()</node> and plain text otherwise) relative to a given context node
+	 * Returns a serialized form of XPath results (i.e. serialized XML if the result type is <code>node()</code> and plain text otherwise) relative to a given context node
 	 * @param documentController the current AuthorDocumentController
 	 * @param contextNode  the context node to be used to evaluate the XPath expression
 	 * @param xPathExpression an XPath expression

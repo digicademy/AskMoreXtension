@@ -20,9 +20,9 @@ public class BasicInputFieldFactory {
 	 * Creates a subclass of a BasicOnputField that matches the following params
 	 * @param defaultValue a value that should be displayed on the created input field per default
 	 * @param options a set of options that should be selectable in the created input field
-	 *  <br/>(a basic text input field will be created if the set is empty or <code>null</code>)
+	 *  <br>(a basic text input field will be created if the set is empty or <code>null</code>)
 	 * @param isEditable specifies whether the set of options should be editable or not
-	 *  <br/>(will be ignored if there are no options)
+	 *  <br>(will be ignored if there are no options)
 	 * @param inputVerifiers a set of input verifiers that should be added to the input field
 	 */
 	public static BasicInputField<String> createInputField(String defaultValue, Set<SelectableOption<String>> options, boolean isEditable, 
