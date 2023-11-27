@@ -30,7 +30,8 @@ public class SelectableOptionFactory {
 			case 1:
 				if (reduceWhitespace)
 					serializedOption = StringUtils.reduceWhitespace(serializedOption);
-				return new SelectableOption<String>(serializedOption);
+				serializedOption = StringUtils.removeEnclosingQuotes(serializedOption);
+				return new SelectableOption<String>(StringUtils.removeEscapedQuotes(serializedOption));
 			case 2:
 				// get values
 				String realValue = StringUtils.removeEnclosingQuotes(realValueFirst ? values[0] : values[1]);
