@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2024-05-16
+
+### Added
+- added new flag !ENCODE_URL to AskMoreAnnotations 
+
+## [1.4.2] - 2023-11-27
+
+### Fixed
+- fixed method org.adwmainz.da.extensions.askmore.factories.SelectableOptionFactory.java#createOption() to remove enclosing quotes once again after introducing this bug in 1.4.1
+
+## [1.4.1] - 2023-11-22
+
+### Fixed
+- fixed method org.adwmainz.da.extensions.askmore.factories.SelectableOptionFactory.java#createOption() to be able to handle pipe symbols
+- fixed method org.adwmainz.da.extensions.askmore.utils.AskMoreAnnotationParser.java#createDialogModel() to be able to handle pipe symbols
+
+### Fixed
+- fixed method org.adwmainz.da.extensions.askmore.factories.SelectableOptionFactory.java#createOption() to be able to handle pipe symbols
+- fixed method org.adwmainz.da.extensions.askmore.utils.AskMoreAnnotationParser.java#createDialogModel() to be able to handle pipe symbols
+
 ## [1.4.0] - 2022-11-04
 
 ### Added
