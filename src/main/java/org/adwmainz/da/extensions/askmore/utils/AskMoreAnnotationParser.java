@@ -7,6 +7,9 @@
  */
 package org.adwmainz.da.extensions.askmore.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -35,6 +38,7 @@ public class AskMoreAnnotationParser {
 			+ " ?: ?\\(" + "(.*?)" /* Options */ + "\\)" + "((![^$]+)*)" /* Flags */ + "\\$\\$";
 	protected static final String DEFAULT_VALUE_PATTERN = "DEFAULT\\(\"" + "(.*?)" /* value */ + "\"\\)";
 	protected static final String IS_EDITABLE_PATTERN = "EDITABLE";
+	protected static final String URL_ENCODE_PATTERN = "URL_ENCODE";
 	protected static final String REGEX_FLAG_PATTERN = "REGEX\\(\"" + "(.*?)" /* regex */ + "\"\\)";
 	protected static final String CONTAINS_WHITESPACE_PATTERN = ".*?\\s+.*?";
 	
@@ -88,6 +92,8 @@ public class AskMoreAnnotationParser {
 						}
 						else if (flag.matches(IS_EDITABLE_PATTERN))
 							isEditable = true; // set editable
+						else if (flag.matches(URL_ENCODE_PATTERN))
+							;
 						else 
 							inputVerifiers.add(createInputVerifier(flag)); // create input verifier
 					}
@@ -163,7 +169,21 @@ public class AskMoreAnnotationParser {
 				label = StringUtils.removeEscapedQuotes(label);
 				
 				// replace annotation with user input
-				annotatedText = annotatedText.replace(askMoreAnnotation, userInput.get(label));
+				String input = userInput.get(label);
+				String flags = matcher.group(3);
+				if (flags.length() > 1) {
+					flags = flags.substring(1); // remove first exclamation mark
+					for (String flag: flags.split("!")) {
+						if (flag.matches(URL_ENCODE_PATTERN)) {
+							try {
+								input = URLEncoder.encode(input, StandardCharsets.UTF_8.toString());
+							} catch (UnsupportedEncodingException e) {
+								throw new IllegalArgumentException(e.getCause());
+							}
+						}
+					}
+				}
+				annotatedText = annotatedText.replace(askMoreAnnotation, input);
 			}
 		}
 		return annotatedText;
@@ -188,6 +208,7 @@ public class AskMoreAnnotationParser {
 				+ " inserted and the !DEFAULT() flag for a preselection which must always reference a real value: "
 				+ "e.g. $$\"LABEL4\":(\"A\", \"REAL_B\"|\"RENDERED_B\")!DEFAULT(\"REAL_B\")$$ is valid)\n"
 				+ "- $$\"LABEL5\":(\"A\", \"B\")!DEFAULT(\"B\")!EDITABLE$$ creates an editable combo box with the label LABEL5\n"
+				+ "You can also use the !URL_ENCODE flag to let the input be URL encoded.\n"
 				+ "Besides the !DEFAULT() and !EDITABLE flags you may also add the following restriction flags to any annotation:\n"
 				+ "- !NO_XML for text input without the chars " + Arrays.toString(XMLUtils.getSpecialChars()) + "\n"
 				+ "- !NO_SPACE for text input without whitespace\n"
