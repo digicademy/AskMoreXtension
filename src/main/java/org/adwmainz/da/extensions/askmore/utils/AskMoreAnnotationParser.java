@@ -41,6 +41,7 @@ public class AskMoreAnnotationParser {
 	protected static final String URL_ENCODE_PATTERN = "URL_ENCODE";
 	protected static final String REGEX_FLAG_PATTERN = "REGEX\\(\"" + "(.*?)" /* regex */ + "\"\\)";
 	protected static final String CONTAINS_WHITESPACE_PATTERN = ".*?\\s+.*?";
+	protected static final String XML_ESCAPE_PATTERN = "XML_ESCAPE";
 	
 	/**
 	 * Returns a List of AskMoreAnnotations from an annotated String
@@ -94,11 +95,12 @@ public class AskMoreAnnotationParser {
 							isEditable = true; // set editable
 						else if (flag.matches(URL_ENCODE_PATTERN))
 							;
+						else if (flag.matches(XML_ESCAPE_PATTERN))
+							;
 						else 
 							inputVerifiers.add(createInputVerifier(flag)); // create input verifier
 					}
 				}
-				
 
 				// create input field
 				dialogModel.put(label, BasicInputFieldFactory.createInputField(defaultValue, options, isEditable, inputVerifiers)); 
@@ -181,6 +183,12 @@ public class AskMoreAnnotationParser {
 								throw new IllegalArgumentException(e.getCause());
 							}
 						}
+						
+						// escape entities if ESCAPE flag is set
+						if (flag.matches(XML_ESCAPE_PATTERN)) {
+							input = input.replace("&", "&amp;");
+							input = input.replace("<", "&lt;");
+						}
 					}
 				}
 				annotatedText = annotatedText.replace(askMoreAnnotation, input);
@@ -208,8 +216,10 @@ public class AskMoreAnnotationParser {
 				+ " inserted and the !DEFAULT() flag for a preselection which must always reference a real value: "
 				+ "e.g. $$\"LABEL4\":(\"A\", \"REAL_B\"|\"RENDERED_B\")!DEFAULT(\"REAL_B\")$$ is valid)\n"
 				+ "- $$\"LABEL5\":(\"A\", \"B\")!DEFAULT(\"B\")!EDITABLE$$ creates an editable combo box with the label LABEL5\n"
-				+ "You can also use the !URL_ENCODE flag to let the input be URL encoded.\n"
-				+ "Besides the !DEFAULT() and !EDITABLE flags you may also add the following restriction flags to any annotation:\n"
+				+ "You can also use the the following encoding flags:\n"
+				+ "- !URL_ENCODE to let the input be URL encoded\n"
+				+ "- !XML_ESCAPE to escape < and &\n"
+				+ "Besides the !DEFAULT(), !EDITABLE and the encoding flags you may also add the following restriction flags to any annotation:\n"
 				+ "- !NO_XML for text input without the chars " + Arrays.toString(XMLUtils.getSpecialChars()) + "\n"
 				+ "- !NO_SPACE for text input without whitespace\n"
 				+ "- !POS_INT for positive integer input\n"
