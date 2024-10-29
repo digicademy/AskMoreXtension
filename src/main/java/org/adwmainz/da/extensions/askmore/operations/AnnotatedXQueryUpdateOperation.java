@@ -49,7 +49,7 @@ public class AnnotatedXQueryUpdateOperation extends XQueryUpdateOperation {
 		try {
 			// parse annotated arguments
 			ArgumentParser.replaceAnnotationsWithUserInput(parsedArgs, AskMoreArgumentProvider.ARGUMENT_SCRIPT);
-			ArgumentParser.replaceAnnotationsWithUserInput(parsedArgs, AskMoreArgumentProvider.ARGUMENT_EXTERNAL_PARAMS);
+			ArgumentParser.replaceAnnotationsWithUserInput(parsedArgs, AskMoreArgumentProvider.ARGUMENT_EXTERNAL_PARAMS, "");
 			
 			// invoke main operation from super class
 			super.doOperation(authorAccess, parsedArgs);
