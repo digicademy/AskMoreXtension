@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2024-10-31
+
+### Changed
+- changed class org.adwmainz.da.extensions.askmore.models.BasicSelectionField.java to have protected fields
+
+### Added
+- added new flag !ESCAPE_XML to AskMoreAnnotations 
+- added new flags !MULTISELECT and !SEP(";") to AskMoreAnnotations 
+- added new helper class org.adwmainz.da.extensions.askmore.models.BasicMultiSelectionField.java
+- added new helper class org.adwmainz.da.extensions.askmore.models.ConcatenatingJList.java.java
+- added new helper methods to org.adwmainz.da.extensions.askmore.factories.BasicInputFieldFactory.java
+
+### Fixed
+- fixed class org.adwmainz.da.extensions.askmore.operations.AnnotatedXQueryUpdateOperation.java to be able to handle an empty externalParams param
+
 ## [1.5.0] - 2024-05-16
 
 ### Added

@@ -38,6 +38,8 @@ public class AskMoreAnnotationParser {
 			+ " ?: ?\\(" + "(.*?)" /* Options */ + "\\)" + "((![^$]+)*)" /* Flags */ + "\\$\\$";
 	protected static final String DEFAULT_VALUE_PATTERN = "DEFAULT\\(\"" + "(.*?)" /* value */ + "\"\\)";
 	protected static final String IS_EDITABLE_PATTERN = "EDITABLE";
+	protected static final String IS_MULTISELECT_PATTERN = "MULTISELECT";
+	protected static final String SEPARATOR_PATTERN = "SEP\\(\"" + "(.*?)" /* value */ + "\"\\)";
 	protected static final String URL_ENCODE_PATTERN = "URL_ENCODE";
 	protected static final String REGEX_FLAG_PATTERN = "REGEX\\(\"" + "(.*?)" /* regex */ + "\"\\)";
 	protected static final String CONTAINS_WHITESPACE_PATTERN = ".*?\\s+.*?";
@@ -79,6 +81,8 @@ public class AskMoreAnnotationParser {
 				// get default value, editability info and other flags
 				String defaultValue = "";
 				boolean isEditable = false;
+				boolean isMultiselect = false;
+				String separator = " ";
 				Set<VerboseInputVerifier> inputVerifiers = new HashSet<>();
 				
 				String flags = matcher.group(3);
@@ -93,6 +97,13 @@ public class AskMoreAnnotationParser {
 						}
 						else if (flag.matches(IS_EDITABLE_PATTERN))
 							isEditable = true; // set editable
+						else if (flag.matches(IS_MULTISELECT_PATTERN))
+							isMultiselect = true; 
+						else if (flag.matches(SEPARATOR_PATTERN)) {
+							separator = flag.replaceAll(SEPARATOR_PATTERN, "$1");
+							separator = StringUtils.removeEnclosingQuotes(separator);
+							separator = StringUtils.removeEscapedQuotes(separator);
+						} 
 						else if (flag.matches(URL_ENCODE_PATTERN))
 							;
 						else if (flag.matches(XML_ESCAPE_PATTERN))
@@ -103,7 +114,11 @@ public class AskMoreAnnotationParser {
 				}
 
 				// create input field
-				dialogModel.put(label, BasicInputFieldFactory.createInputField(defaultValue, options, isEditable, inputVerifiers)); 
+				if (isMultiselect) {
+					dialogModel.put(label, BasicInputFieldFactory.createMultiselectionField(defaultValue, options, isEditable, inputVerifiers, separator)); 
+				} else {
+					dialogModel.put(label, BasicInputFieldFactory.createInputField(defaultValue, options, isEditable, inputVerifiers));
+				}
 			} else {
 				throw new IllegalArgumentException("The String \""+askMoreAnnotation+"\" is not a valid AskMoreAnnotation");
 			}
@@ -216,7 +231,8 @@ public class AskMoreAnnotationParser {
 				+ " inserted and the !DEFAULT() flag for a preselection which must always reference a real value: "
 				+ "e.g. $$\"LABEL4\":(\"A\", \"REAL_B\"|\"RENDERED_B\")!DEFAULT(\"REAL_B\")$$ is valid)\n"
 				+ "- $$\"LABEL5\":(\"A\", \"B\")!DEFAULT(\"B\")!EDITABLE$$ creates an editable combo box with the label LABEL5\n"
-				+ "You can also use the the following encoding flags:\n"
+				+ "- $$\"LABEL5\":(\"A\", \"B\")!MULTISELECT$$ returns a whitespace separated list (add !SEP(\";\") to separate with a semicolon instead)\n"
+				+ "You can also use the following encoding flags:\n"
 				+ "- !URL_ENCODE to let the input be URL encoded\n"
 				+ "- !XML_ESCAPE to escape < and &\n"
 				+ "Besides the !DEFAULT(), !EDITABLE and the encoding flags you may also add the following restriction flags to any annotation:\n"

@@ -9,6 +9,7 @@ package org.adwmainz.da.extensions.askmore.factories;
 import java.util.Set;
 
 import org.adwmainz.da.extensions.askmore.models.BasicInputField;
+import org.adwmainz.da.extensions.askmore.models.BasicMultiSelectionField;
 import org.adwmainz.da.extensions.askmore.models.SelectableOption;
 import org.adwmainz.da.extensions.askmore.models.BasicSelectionField;
 import org.adwmainz.da.extensions.askmore.models.VerboseInputVerifier;
@@ -17,7 +18,7 @@ import org.adwmainz.da.extensions.askmore.utils.StringUtils;
 public class BasicInputFieldFactory {
 
 	/**
-	 * Creates a subclass of a BasicOnputField that matches the following params
+	 * Creates a subclass of a BasicInputField that matches the following params
 	 * @param defaultValue a value that should be displayed on the created input field per default
 	 * @param options a set of options that should be selectable in the created input field
 	 *  <br>(a basic text input field will be created if the set is empty or <code>null</code>)
@@ -36,6 +37,28 @@ public class BasicInputFieldFactory {
 			// create a selection field
 			inputField = new BasicSelectionField<>(options, isEditable);
 		}
+		
+		// add default value if there is one
+		if (StringUtils.isNonEmpty(defaultValue))
+			inputField.setDefaultValue(defaultValue);
+		
+		// add input verifiers
+		if (!inputVerifiers.isEmpty())
+			inputField.setInputVerifiers(inputVerifiers);
+		return inputField;
+	}
+	
+	/**
+	 * Creates a BasicMultiSelectionField that matches the following params
+	 * @param defaultValue a value that should be displayed on the created input field per default
+	 * @param options a set of options that should be selectable in the created input field
+	 * @param isEditable specifies whether the set of options should be editable or not
+	 * @param inputVerifiers a set of input verifiers that should be added to the input field
+	 */
+	public static BasicInputField<String> createMultiselectionField(String defaultValue, Set<SelectableOption<String>> options, boolean isEditable, 
+			Set<VerboseInputVerifier> inputVerifiers, String separator) {
+		// create an input field
+		BasicInputField<String> inputField = new BasicMultiSelectionField<String>(options, isEditable, separator);
 		
 		// add default value if there is one
 		if (StringUtils.isNonEmpty(defaultValue))

@@ -13,23 +13,29 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import org.adwmainz.da.extensions.askmore.exceptions.InputDialogClosedException;
 import org.adwmainz.da.extensions.askmore.models.BasicInputField;
+import org.adwmainz.da.extensions.askmore.models.BasicMultiSelectionField;
 import org.adwmainz.da.extensions.askmore.models.SelectableOption;
 import org.adwmainz.da.extensions.askmore.models.BasicSelectionField;
+import org.adwmainz.da.extensions.askmore.models.ConcatenatingJList;
 import org.adwmainz.da.extensions.askmore.models.VerboseInputVerifier;
 
 public class LabeledTextInputDialog extends BasicInputDialog<Map<String, String>> {
@@ -129,8 +135,35 @@ public class LabeledTextInputDialog extends BasicInputDialog<Map<String, String>
 			
 			// create the input field
 			BasicInputField<String> inputField = dialogModel.get(labelText);
-			
-			if (inputField instanceof BasicSelectionField) {
+
+			if (inputField instanceof BasicMultiSelectionField) {
+				// create a multiselection list and add it to the list of input components
+				BasicMultiSelectionField<String> selectionField = (BasicMultiSelectionField<String>) inputField;
+				DefaultListModel<SelectableOption<String>> model = new DefaultListModel<>();
+				for (SelectableOption<String> option: selectionField.getOptions()) {
+					model.addElement(option);
+				}
+				ConcatenatingJList<SelectableOption<String>> multiSelectionList = new ConcatenatingJList<>(model, selectionField.getSeparator());
+				inputComponents.put(labelText, multiSelectionList);
+				
+				// adapt styling to other components
+				int defaultVisibleRowCount = 5; // TODO: externalize as var
+				int defaultCellWidth = 400; // TODO: externalize as var
+				multiSelectionList.setVisibleRowCount(defaultVisibleRowCount);
+				multiSelectionList.setFixedCellWidth(defaultCellWidth);
+				JScrollPane pane = new JScrollPane(multiSelectionList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				if (selectionField.isEditable()) {
+					// create a button for dynamically adding options
+					JButton addOptionButton = new JButton("+");
+					addOptionButton.addActionListener(new AddItemActionListener(getOwner(), isModal(), labelText, selectionField, multiSelectionList));
+					
+					// position components
+					addFormGroup(label, pane, addOptionButton);
+				} else {
+					// position components
+					addFormGroup(label, pane);
+				}
+			} else if (inputField instanceof BasicSelectionField) {
 				// create a combo box and add it to the list of input components
 				BasicSelectionField<String> selectionField = (BasicSelectionField<String>) inputField;
 				JComboBox<SelectableOption<String>> comboBox = new JComboBox<>(new Vector<SelectableOption<String>>(selectionField.getOptions()));
@@ -148,7 +181,7 @@ public class LabeledTextInputDialog extends BasicInputDialog<Map<String, String>
 				} else {
 					// position components
 					addFormGroup(label, comboBox);
-				}				
+				}
 			} else {
 				// create a text field and add it to the list of input components
 				JTextField textField;
@@ -180,16 +213,16 @@ public class LabeledTextInputDialog extends BasicInputDialog<Map<String, String>
 		private boolean isModal;
 		private String labelText;
 		private BasicSelectionField<String> selectionField;
-		private JComboBox<SelectableOption<String>> comboBox;
+		private JComponent component;
 		
 		// constructors
 		public AddItemActionListener(Window owner, boolean isModal, String labelText, BasicSelectionField<String> selectionField,
-				JComboBox<SelectableOption<String>> comboBox) {
+				JComponent component) {
 			this.owner = owner;
 			this.isModal = isModal;
 			this.labelText = labelText;
 			this.selectionField = selectionField;
-			this.comboBox = comboBox;
+			this.component = component;
 		}
 		
 		@Override
@@ -217,9 +250,15 @@ public class LabeledTextInputDialog extends BasicInputDialog<Map<String, String>
 				SelectableOption<String> addedOption = new SelectableOption<>(addItemUserInput);
 				if (selectionField.getOptions().contains(addedOption))
 					JOptionPane.showMessageDialog(owner, noAdditionMessage);
-				else {
+				else if (component instanceof JComboBox) {
+					JComboBox<SelectableOption<String>> comboBox = (JComboBox<SelectableOption<String>>) component;
 					comboBox.addItem(addedOption);
 					comboBox.setSelectedItem(addedOption);
+				} else if (component instanceof JList) {
+					JList<SelectableOption<String>> multiselectionList = (JList<SelectableOption<String>>) component;
+					DefaultListModel<SelectableOption<String>> model = (DefaultListModel<SelectableOption<String>>) multiselectionList.getModel();
+					model.addElement(addedOption);
+					multiselectionList.setModel(model);
 				}
 			} catch (InputDialogClosedException e1) {
 				// notify user
@@ -276,7 +315,20 @@ public class LabeledTextInputDialog extends BasicInputDialog<Map<String, String>
 		userInput = new HashMap<>(dialogModel.size());
 		for (String labelText: dialogModel.keySet()) {
 			JComponent inputComponent = inputComponents.get(labelText);
-			if (inputComponent instanceof JComboBox) {
+			if (inputComponent instanceof ConcatenatingJList) {
+				// get real value of selected option from combo box
+				ConcatenatingJList<SelectableOption<String>> multiselectionList = (ConcatenatingJList<SelectableOption<String>>) inputComponent;
+				String concatenatedValue = "";
+				List<SelectableOption<String>> selectedOptions = multiselectionList.getSelectedValuesList();
+				for (int i=0; i<selectedOptions.size(); i++) {
+					SelectableOption<String> selectedOption = selectedOptions.get(i);
+					if (i > 0) {
+						concatenatedValue += multiselectionList.getConcatenator();
+					}
+					concatenatedValue += selectedOption.getRealValue();
+				}
+				userInput.put(labelText, concatenatedValue);
+			} else if (inputComponent instanceof JComboBox) {
 				// get real value of selected option from combo box
 				JComboBox<SelectableOption<String>> comboBox = (JComboBox<SelectableOption<String>>) inputComponent;
 				SelectableOption<String> selectedOption = (SelectableOption<String>) comboBox.getSelectedItem();
