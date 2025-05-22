@@ -6,13 +6,13 @@ This software package provides eight Java operations developed at the Digital Ac
 
 
 # Requirements
-The AskMoreXtension was developed and tested to be used with the versions 19.1 to 24.0 of the [Oxygen XML Editor](https://www.oxygenxml.com/).
+The AskMoreXtension was developed and tested to be used with the versions 19.1 to 27.1 of the [Oxygen XML Editor](https://www.oxygenxml.com/) and depends on the the Saxon version included.
 
 
 # Download and Installation
 All releases can be downloaded as a .jar file from the [release page of this repository](https://github.com/digicademy/AskMoreXtension/releases).
 
-You can include the package into your own Oxygen framework by adding a released JAR to the classpath. Please find notes on how to do this in the [official documentation of the ClassPath Tab](https://www.oxygenxml.com/doc/versions/19.1/ug-editor/topics/document-type-classpath-tab.html).
+You can include the package into your own Oxygen framework by adding a released JAR to the classpath. Please find notes on how to do this in the [official documentation of the ClassPath Tab](https://www.oxygenxml.com/doc/versions/27.1/ug-editor/topics/document-type-classpath-tab.html).
 
 
 # License
